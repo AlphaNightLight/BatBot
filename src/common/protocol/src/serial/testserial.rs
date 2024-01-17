@@ -58,6 +58,10 @@ impl Serial for TestSerial {
     fn available(&mut self) -> i32 {
         self.rx.lock().unwrap().len() as i32
     }
+
+    fn flush(&mut self) {
+        return;
+    }
 }
 #[cfg(test)]
 mod tests {

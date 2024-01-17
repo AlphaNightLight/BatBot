@@ -33,6 +33,7 @@ impl<S: Serial> Protocol<S> {
                 Some(S::unsafe_available),
                 Some(S::unsafe_send),
                 Some(S::unsafe_read),
+                Some(S::unsafe_flush),
             );
             Self { p, ph: PhantomData }
         }

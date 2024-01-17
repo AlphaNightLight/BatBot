@@ -1,7 +1,7 @@
 #include"protocol.hpp"
 
-void Protocol::init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *)){
-    this->checker.init(data, inner_available, inner_send, inner_read);
+void Protocol::init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *), void (*inner_flush)(void*)){
+    this->checker.init(data, inner_available, inner_send, inner_read, inner_flush);
 }
 Protocol new_protocol(){
     Protocol t;

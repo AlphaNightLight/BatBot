@@ -1,16 +1,17 @@
 mod testserial;
-mod bluetooth;
+//mod bluetooth;
 
 use std::ffi::c_void;
 
 pub use testserial::TestSerial;
-pub use bluetooth::Bluetooth;
+//pub use bluetooth::Bluetooth;
 
 ///Serial interface
 ///
 /// It's an abstraction on how a Serial interface should work
 
 pub trait Serial {
+    fn flush(&mut self);
     fn send(&mut self, d: u8);
     /// this could fail, but the c impl doesn't need to know that
     fn read(&mut self) -> u8;
@@ -42,6 +43,13 @@ pub trait CSerial: Serial {
     ///
     /// this parameter must be a valid pointer to the implemented struct
     unsafe extern "C" fn unsafe_read(this: *mut c_void) -> u8;
+
+    /// C wrapper around Serial::flush
+    ///
+    /// # Safety
+    ///
+    /// this parameter must be a valid pointer to the implemented struct
+    unsafe extern "C" fn unsafe_flush(this: *mut c_void);
 }
 
 impl<T: Serial> CSerial for T {
@@ -58,5 +66,9 @@ impl<T: Serial> CSerial for T {
     unsafe extern "C" fn unsafe_read(this: *mut c_void) -> u8 {
         let x = this as *mut T;
         T::read(&mut *x)
+    }
+    unsafe extern "C" fn unsafe_flush(this: *mut c_void) {
+        let x = this as *mut T;
+        T::flush(&mut *x);
     }
 }

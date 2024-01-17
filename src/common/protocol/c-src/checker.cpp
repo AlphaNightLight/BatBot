@@ -86,10 +86,11 @@ bool Checker::try_read_message(){
     return false;
 }
 
-void Checker::init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *)){
+void Checker::init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *), void (*inner_flush)(void*)){
     this->data=data;
     this->pos=0;
     this->inner_available=inner_available;
     this->inner_send=inner_send;
     this->inner_read=inner_read;
+    this->inner_flush=inner_flush;
 }

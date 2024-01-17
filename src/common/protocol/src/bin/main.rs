@@ -1,4 +1,3 @@
-
 use protocol::{
     serial::{Serial, TestSerial},
     Protocol,
@@ -36,14 +35,13 @@ fn main() {
         }
     }
     let res: Result<(), String> = to_exec
-    .par_iter()
-    .map(|(e, l, n)| test_distribution(*e, *l, *n)).collect();
+        .par_iter()
+        .map(|(e, l, n)| test_distribution(*e, *l, *n))
+        .collect();
     println!("{:?}", res);
-    
-    
 }
 
-fn test_distribution(e: f64, length: i32, n: i32)->Result<(), String>{
+fn test_distribution(e: f64, length: i32, n: i32) -> Result<(), String> {
     let (robot, pc) = TestSerial::new(e);
     let mut robot = Protocol::new(robot);
     let mut pc = Protocol::new(pc);

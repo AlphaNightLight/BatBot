@@ -1,8 +1,9 @@
 use std::{error::Error, sync::mpsc::{self, Sender, Receiver}};
 
-use bluer::{AdapterEvent, Adapter};
-use futures::{pin_mut, StreamExt, Stream, executor::block_on};
+use bluer::{AdapterEvent, Adapter, Address};
+use futures::{pin_mut, StreamExt, Stream, executor::block_on, TryFutureExt};
 use tokio::{runtime::Runtime, task::spawn_blocking};
+use std::future::Future;
 
 use super::Serial;
 
@@ -10,22 +11,39 @@ use super::Serial;
 struct InnerBluetooth{
     to_send: mpsc::Receiver<u8>,
     readen: mpsc::Sender<u8>,
+    address: Address,
 }
 
 impl InnerBluetooth{
-    fn new(to_send: Receiver<u8>, readen: Sender<u8>)->Self{
+    fn new(to_send: Receiver<u8>, readen: Sender<u8>, address: Address)->Self{
         Self {
             to_send,
-            readen
+            readen,
+            address
         }
     }
-    pub async fn discover(&self, adapter: Adapter)->Result<(), Box<dyn Error+Send>>{
+    pub async fn discover(self, adapter: Adapter)->Result<(), Box<dyn Error>>{
         let discover = adapter.discover_devices().await?;
         // pin discover (not going out of scope in async)
         pin_mut!(discover);
         while let Some(evt) = discover.next().await{
             match evt{
-                AdapterEvent::DeviceAdded(_) => todo!(),
+                AdapterEvent::DeviceAdded(x) => {
+                    if self.address != x{
+                        continue;
+                    }
+                    println!("found, trying connecting:");
+                    let device = adapter.device(x)?;
+                    let mut count = 0;
+                    while let Err(x) =  device.connect().await{
+                        count+=1;
+                        if count>10{
+                            Err("Can't connect".to_string())?;
+                        }
+                        println!("{}", x);
+                    }
+
+                },
                 AdapterEvent::DeviceRemoved(_) => todo!(),
                 AdapterEvent::PropertyChanged(_) => todo!(),
             }
@@ -42,7 +60,7 @@ pub struct Bluetooth{
 }
 
 impl Bluetooth{
-    pub fn new()->Result<Self, Box<dyn Error>>{
+    pub fn new(address: Address)->Result<Self, Box<dyn Error>>{
         // creating async runtime
 
         let rt = Runtime::new().unwrap();
@@ -72,10 +90,19 @@ impl Bluetooth{
 
         let (tx1, rx1) = mpsc::channel::<u8>();
         let (tx2, rx2) = mpsc::channel::<u8>();
-        let inner = InnerBluetooth::new(rx1, tx2);
-        let t = rt.spawn( async {
-            inner.discover(adapter).await
-        });
+        let inner = InnerBluetooth::new(rx1, tx2, address);
+        async fn test(inner: InnerBluetooth, adapter: Adapter)->Result<(), String>{
+            inner.discover(adapter).map_err(|x| x.to_string()).await?;
+
+            Ok(())
+        }
+        /*let closure = (async{
+            //let inner=inner;
+            //inner.discover(adapter).await.map_err(|x| x.to_string());
+            Ok::<(), ()>(())
+        })();*/
+        let t = rt.spawn(test(inner, adapter));
+        //inner.discover(adapter); 
         todo!()
     }   
 }

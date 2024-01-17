@@ -10,7 +10,7 @@ class Protocol{
         
     public:
         Checker checker;
-        void init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *));
+        void init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *), void (*inner_flush)(void*));
         /*unsigned char buffer [BUFFER_SIZE];
         unsigned int pos=0;
         void send(unsigned char);
