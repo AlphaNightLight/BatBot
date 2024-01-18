@@ -1,10 +1,10 @@
 mod testserial;
-//mod bluetooth;
+mod bluetooth2;
 
 use std::ffi::c_void;
 
 pub use testserial::TestSerial;
-//pub use bluetooth::Bluetooth;
+pub use bluetooth2::Bluetooth;
 
 ///Serial interface
 ///

@@ -18,6 +18,7 @@ class Checker{
 
         //function helpers
         void send(unsigned char);
+        void flush();
         unsigned char read();
         unsigned int available(); 
 

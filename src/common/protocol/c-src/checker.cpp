@@ -18,6 +18,7 @@ void Checker::send_msg(unsigned char* buff, unsigned char len){
     this->send(chksm);
     this->send(len);
     this->send(END_SYMBOL);
+    this->flush();
 }
 
 void Checker::send(unsigned char t){
@@ -29,6 +30,9 @@ unsigned int Checker::available(){
 }
 unsigned char Checker::read(){
     return this->inner_read(this->data);
+}
+void Checker::flush(){
+    this->inner_flush(this->data);
 }
 
 int move(int pos){

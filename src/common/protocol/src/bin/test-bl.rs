@@ -1,10 +1,10 @@
 
-use std::{time:: Instant, error::Error};
+use std::time::Instant;
 
-use bluer::{rfcomm::{Socket, SocketAddr, Stream}, Address};
+use bluer::Address;
 use rand::{rngs::OsRng, Rng};
-use tokio::{runtime::Runtime, io::AsyncWriteExt, io::AsyncReadExt};
-
+use tokio::runtime::Runtime;
+/*
 async fn connect()->Result<Stream, Box<dyn Error>>{
     for i in 0..10{
         println!("tentativo {i}");
@@ -24,11 +24,6 @@ fn main() {
     let s = Socket::new().unwrap();
     
     rt.block_on(async {
-        //let session = bluer::Session::new().await.unwrap();
-        //let adapter = session.default_adapter().await.unwrap();
-        //adapter.set_powered(false).await.unwrap();
-       // adapter.set_powered(true).await.unwrap();
-        //sleep(Duration::from_millis(1000));
         
         println!("out_buffer= {}", s.input_buffer().unwrap());
         let mut t = connect().await.unwrap();
@@ -38,15 +33,9 @@ fn main() {
         let start = Instant::now();
         let mut tot_sent=0;
         loop{
-            let to_send: Vec<u8> = (0..100).map(|_| OsRng.gen::<u8>()).collect(); 
+            let to_send: Vec<u8> = (0..16).map(|_| OsRng.gen::<u8>()).collect(); 
             t.write_all(to_send.as_slice()).await.unwrap();
             t.flush().await.unwrap();
-
-            /*let received = t.peek(&mut buf).await.unwrap();
-            while received<10{
-                let received = t.peek(&mut buf).await.unwrap();
-                println!("{}", received);
-            }*/
             let received = t.read(&mut buf).await.unwrap();
             //println!("{:?}->{}", to_send, received);
             tot_sent+=received;
@@ -58,4 +47,49 @@ fn main() {
     });
 
     println!("{:?}", s.conn_info());
+}
+*/
+use protocol::{serial::{Bluetooth, Serial}, Protocol};
+fn main(){
+    let runtime = Runtime::new().unwrap();
+    let mut bl = Bluetooth::try_new(Address::new([0x00, 0x18, 0x91, 0xD8, 0xE9, 0xC7]), runtime.handle().clone()).unwrap();
+    bl.send(0);
+    let mut protocol = Protocol::new(bl);
+    let length=1;
+    let mut corretti=0;
+    let mut totali=0;
+    let start = Instant::now();
+    loop{
+        let mut to_send: Vec<u8> = (0..length).map(|_| OsRng.gen()).collect();
+
+        send(&mut protocol, &mut to_send);
+        let readen = read(&mut protocol).unwrap();
+        if to_send.iter().zip(readen.iter()).all(|(x, y)| *x==*y){
+            corretti+=1;
+        }
+        totali+=1;
+        println!("{corretti} {totali} {} {:.0} baud used {:.2} msg/s", corretti as f32 /totali as f32, ((length+4)*corretti*10) as f32/start.elapsed().as_secs_f32(), corretti as f32/start.elapsed().as_secs_f32());
+        //println!("{:?} {:?}", to_send, &readen[0..length]);
+    }
+
+}
+fn send<S: Serial>(robot: &mut Protocol<S>, to_send: &mut [u8]) {
+    unsafe {
+        let len = to_send.len() as u8;
+        let buff = to_send.as_mut_ptr();
+        robot.checker.send_msg(buff, len);
+    }
+}
+
+fn read<S: Serial>(pc: &mut Protocol<S>) -> Option<Vec<u8>> {
+    for _ in 0..20{
+        unsafe {
+            if pc.checker.try_read_message() {
+                let v = pc.checker.out_buffer.to_vec();
+                pc.checker.out_buffer.iter_mut().for_each(|m| *m = 0);
+                return Some(v);
+            }
+        }
+    }
+    None
 }

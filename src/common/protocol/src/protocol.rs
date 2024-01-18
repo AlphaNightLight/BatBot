@@ -1,9 +1,9 @@
 use std::{
-    alloc::{alloc_zeroed, dealloc, Layout},
+    alloc::{alloc_zeroed, dealloc, Layout, handle_alloc_error},
     ffi::c_void,
     marker::PhantomData,
     ops::{Deref, DerefMut},
-    ptr,
+    ptr::{self, addr_of_mut}, mem::size_of,
 };
 
 use crate::{
@@ -19,15 +19,27 @@ pub struct Protocol<S: Serial> {
 
 impl<S: Serial> Protocol<S> {
     /// get a freshly new protocol out of this
-    pub fn new(mut s: S) -> Self {
+    pub fn new(s: S) -> Self {
         let mut p = unsafe { generated::new_protocol() };
 
         unsafe {
             let layout = Layout::new::<S>();
             let data = alloc_zeroed(layout);
-            let t = &mut s as *mut S;
+            if data.is_null() {
+                handle_alloc_error(layout);
+            }
+            /*let t = &mut s as *mut S;
             ptr::copy(t as *mut u8, data, core::mem::size_of::<S>());
-            *t = s;
+            *t = s;*/
+            //let t = &mut s as *mut S;
+            let t = data as *mut S;
+            
+            //addr_of_mut!(t).write(&s);
+            //println!("coping {} bytes {:p}->{:p} {:p}", size_of::<S>(),&s, data, t);
+            t.write(s);
+           // *(t) = s;
+            //println!("copied");
+            //*t=s;
             p.init(
                 data as *mut c_void,
                 Some(S::unsafe_available),
