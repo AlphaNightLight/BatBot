@@ -3,42 +3,34 @@ name = "protocol"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-
-bluer = { version = "0.16.1", default-features = false, optional=true}
- #features = ["bluetoothd"], default-features = false }
-tokio = { version = "1.35.1", features =["rt-multi-thread"], default-features=false, optional=true}
-rand = {version="0.8", optional = true}
-rayon = {version="1.8", optional = true}
-futures = "0.3"
-
 [lib]
 
-#[[bin]]
-#name = "main"
+[dependencies]
+#things for bluetooth
+bluer = { version = "0.16.1", default-features = false, optional=true}  #features = ["bluetoothd"], default-features = false }
+tokio = { version = "1.35.1", features =["rt-multi-thread"], default-features=false, optional=true}
+futures = {version="0.3", optional = true}
+
+#things for test-serial
+rand = {version="0.8", optional = true}
+rayon = {version="1.8", optional = true}
 
 [build-dependencies]
+# for creating c->rust bindings
 bindgen = "0.69"
 
+
 [features]
+
 default=["rfcomm", "test-serial"]
-"rfcomm"=["dep:bluer", "bluer/rfcomm", "tokio"]
-"test-serial"=["dep:rayon", "dep:rand"]
+rfcomm=["dep:bluer", "bluer/rfcomm", "tokio", "dep:futures"]
+test-serial=["dep:rayon", "dep:rand"]
 
-[dev-dependencies]
-rand = "0.8"
-#bluer = { version = "0.16.1", features = ["rfcomm"], default-features = false}
- #features = ["bluetoothd"], default-features = false }
-#tokio = { version = "1.35.1", features =["rt-multi-thread"], default-features=false}
 
+
+#example for testing simple send/receive to/from bluetooth (the bluetooth device must reply)
 [[example]]
 name = "test-bl"
 crate-type = ["bin"]
 required-features = ["rfcomm"]
 
-#[[example]]
-#name = "test-serial-protocol"
-#crate-type = ["bin"]
-#required-features = ["test-serial"]

@@ -9,6 +9,6 @@ edition = "2021"
 bevy = { version = "0.11", features = ["dynamic_linking"] }
 bevy-aabb-instancing = "0.10"
 rand= "0.8"
-protocol= {path="../protocol"}
+protocol= {path="../../common/protocol", features = ["rfcomm"]}
 #[dependencies]
 #bevy = { version = "0.11" }

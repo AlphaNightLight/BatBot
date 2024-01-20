@@ -18,6 +18,10 @@ pub struct Bluetooth {
     stream: Stream,
 }
 impl Bluetooth {
+    /// Function to get a new bluetooth device
+    /// 
+    /// it must be called with the desired bluetooth address, and an handle to a tokio runtime
+    ///  
     pub fn try_new(address: Address, handle: Handle) -> Result<Self, Box<dyn Error>> {
         let stream = handle.block_on(async { connect(address).await })?;
         let mut ret = Self {
@@ -29,7 +33,7 @@ impl Bluetooth {
         Ok(ret)
     }
 }
-
+/// let's try to connect to this device
 async fn connect(address: Address) -> Result<Stream, Box<dyn Error>> {
     for i in 0..10 {
         println!("tentativo {i}");

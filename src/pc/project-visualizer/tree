@@ -1,0 +1,707 @@
+base64 v0.13.1
+└── bevy_gltf v0.11.3
+    └── bevy_internal v0.11.3
+        ├── bevy v0.11.3
+        │   ├── bevy-aabb-instancing v0.10.0
+        │   │   └── project-visualizer v0.1.0 (/home/alessio/Documents/universita/3.1/embedded/BatBot/src/pc/project-visualizer)
+        │   └── project-visualizer v0.1.0 (/home/alessio/Documents/universita/3.1/embedded/BatBot/src/pc/project-visualizer)
+        └── bevy_dylib v0.11.3
+            └── bevy v0.11.3 (*)
+
+base64 v0.21.7
+└── ron v0.8.1
+    └── bevy_scene v0.11.3
+        ├── bevy_gltf v0.11.3 (*)
+        └── bevy_internal v0.11.3 (*)
+
+bit-vec v0.6.3
+└── wgpu-core v0.16.1
+    └── wgpu v0.16.3
+        └── bevy_render v0.11.3
+            ├── bevy_animation v0.11.3
+            │   ├── bevy_gltf v0.11.3 (*)
+            │   └── bevy_internal v0.11.3 (*)
+            ├── bevy_core_pipeline v0.11.3
+            │   ├── bevy_gizmos v0.11.3
+            │   │   └── bevy_internal v0.11.3 (*)
+            │   ├── bevy_gltf v0.11.3 (*)
+            │   ├── bevy_internal v0.11.3 (*)
+            │   ├── bevy_pbr v0.11.3
+            │   │   ├── bevy_gizmos v0.11.3 (*)
+            │   │   ├── bevy_gltf v0.11.3 (*)
+            │   │   └── bevy_internal v0.11.3 (*)
+            │   ├── bevy_sprite v0.11.3
+            │   │   ├── bevy_gizmos v0.11.3 (*)
+            │   │   ├── bevy_internal v0.11.3 (*)
+            │   │   ├── bevy_text v0.11.3
+            │   │   │   ├── bevy_internal v0.11.3 (*)
+            │   │   │   └── bevy_ui v0.11.3
+            │   │   │       └── bevy_internal v0.11.3 (*)
+            │   │   └── bevy_ui v0.11.3 (*)
+            │   └── bevy_ui v0.11.3 (*)
+            ├── bevy_gizmos v0.11.3 (*)
+            ├── bevy_gltf v0.11.3 (*)
+            ├── bevy_internal v0.11.3 (*)
+            ├── bevy_pbr v0.11.3 (*)
+            ├── bevy_scene v0.11.3 (*)
+            ├── bevy_sprite v0.11.3 (*)
+            ├── bevy_text v0.11.3 (*)
+            └── bevy_ui v0.11.3 (*)
+
+bit-vec v0.6.3
+└── bit-set v0.5.3
+    ├── bevy_reflect_derive v0.11.3 (proc-macro)
+    │   └── bevy_reflect v0.11.3
+    │       ├── bevy_animation v0.11.3 (*)
+    │       ├── bevy_app v0.11.3
+    │       │   ├── bevy_a11y v0.11.3
+    │       │   │   ├── bevy_internal v0.11.3 (*)
+    │       │   │   ├── bevy_ui v0.11.3 (*)
+    │       │   │   └── bevy_winit v0.11.3
+    │       │   │       └── bevy_internal v0.11.3 (*)
+    │       │   ├── bevy_animation v0.11.3 (*)
+    │       │   ├── bevy_asset v0.11.3
+    │       │   │   ├── bevy_animation v0.11.3 (*)
+    │       │   │   ├── bevy_audio v0.11.3
+    │       │   │   │   └── bevy_internal v0.11.3 (*)
+    │       │   │   ├── bevy_core_pipeline v0.11.3 (*)
+    │       │   │   ├── bevy_gizmos v0.11.3 (*)
+    │       │   │   ├── bevy_gltf v0.11.3 (*)
+    │       │   │   ├── bevy_internal v0.11.3 (*)
+    │       │   │   ├── bevy_pbr v0.11.3 (*)
+    │       │   │   ├── bevy_render v0.11.3 (*)
+    │       │   │   ├── bevy_scene v0.11.3 (*)
+    │       │   │   ├── bevy_sprite v0.11.3 (*)
+    │       │   │   ├── bevy_text v0.11.3 (*)
+    │       │   │   └── bevy_ui v0.11.3 (*)
+    │       │   ├── bevy_audio v0.11.3 (*)
+    │       │   ├── bevy_core v0.11.3
+    │       │   │   ├── bevy_animation v0.11.3 (*)
+    │       │   │   ├── bevy_core_pipeline v0.11.3 (*)
+    │       │   │   ├── bevy_diagnostic v0.11.3
+    │       │   │   │   ├── bevy_asset v0.11.3 (*)
+    │       │   │   │   └── bevy_internal v0.11.3 (*)
+    │       │   │   ├── bevy_gizmos v0.11.3 (*)
+    │       │   │   ├── bevy_gltf v0.11.3 (*)
+    │       │   │   ├── bevy_hierarchy v0.11.3
+    │       │   │   │   ├── bevy_animation v0.11.3 (*)
+    │       │   │   │   ├── bevy_gltf v0.11.3 (*)
+    │       │   │   │   ├── bevy_internal v0.11.3 (*)
+    │       │   │   │   ├── bevy_render v0.11.3 (*)
+    │       │   │   │   ├── bevy_scene v0.11.3 (*)
+    │       │   │   │   ├── bevy_transform v0.11.3
+    │       │   │   │   │   ├── bevy_animation v0.11.3 (*)
+    │       │   │   │   │   ├── bevy_audio v0.11.3 (*)
+    │       │   │   │   │   ├── bevy_core_pipeline v0.11.3 (*)
+    │       │   │   │   │   ├── bevy_gizmos v0.11.3 (*)
+    │       │   │   │   │   ├── bevy_gltf v0.11.3 (*)
+    │       │   │   │   │   ├── bevy_internal v0.11.3 (*)
+    │       │   │   │   │   ├── bevy_pbr v0.11.3 (*)
+    │       │   │   │   │   ├── bevy_render v0.11.3 (*)
+    │       │   │   │   │   ├── bevy_scene v0.11.3 (*)
+    │       │   │   │   │   ├── bevy_sprite v0.11.3 (*)
+    │       │   │   │   │   ├── bevy_text v0.11.3 (*)
+    │       │   │   │   │   └── bevy_ui v0.11.3 (*)
+    │       │   │   │   ├── bevy_ui v0.11.3 (*)
+    │       │   │   │   └── bevy_winit v0.11.3 (*)
+    │       │   │   ├── bevy_internal v0.11.3 (*)
+    │       │   │   └── bevy_render v0.11.3 (*)
+    │       │   ├── bevy_core_pipeline v0.11.3 (*)
+    │       │   ├── bevy_diagnostic v0.11.3 (*)
+    │       │   ├── bevy_gilrs v0.11.3
+    │       │   │   └── bevy_internal v0.11.3 (*)
+    │       │   ├── bevy_gizmos v0.11.3 (*)
+    │       │   ├── bevy_gltf v0.11.3 (*)
+    │       │   ├── bevy_hierarchy v0.11.3 (*)
+    │       │   ├── bevy_input v0.11.3
+    │       │   │   ├── bevy_gilrs v0.11.3 (*)
+    │       │   │   ├── bevy_internal v0.11.3 (*)
+    │       │   │   ├── bevy_ui v0.11.3 (*)
+    │       │   │   ├── bevy_window v0.11.3
+    │       │   │   │   ├── bevy_internal v0.11.3 (*)
+    │       │   │   │   ├── bevy_pbr v0.11.3 (*)
+    │       │   │   │   ├── bevy_render v0.11.3 (*)
+    │       │   │   │   ├── bevy_text v0.11.3 (*)
+    │       │   │   │   ├── bevy_ui v0.11.3 (*)
+    │       │   │   │   └── bevy_winit v0.11.3 (*)
+    │       │   │   └── bevy_winit v0.11.3 (*)
+    │       │   ├── bevy_internal v0.11.3 (*)
+    │       │   ├── bevy_log v0.11.3
+    │       │   │   ├── bevy_asset v0.11.3 (*)
+    │       │   │   ├── bevy_diagnostic v0.11.3 (*)
+    │       │   │   ├── bevy_gilrs v0.11.3 (*)
+    │       │   │   ├── bevy_gltf v0.11.3 (*)
+    │       │   │   ├── bevy_hierarchy v0.11.3 (*)
+    │       │   │   ├── bevy_internal v0.11.3 (*)
+    │       │   │   ├── bevy_render v0.11.3 (*)
+    │       │   │   ├── bevy_sprite v0.11.3 (*)
+    │       │   │   └── bevy_ui v0.11.3 (*)
+    │       │   ├── bevy_pbr v0.11.3 (*)
+    │       │   ├── bevy_render v0.11.3 (*)
+    │       │   ├── bevy_scene v0.11.3 (*)
+    │       │   ├── bevy_sprite v0.11.3 (*)
+    │       │   ├── bevy_text v0.11.3 (*)
+    │       │   ├── bevy_time v0.11.3
+    │       │   │   ├── bevy_animation v0.11.3 (*)
+    │       │   │   ├── bevy_diagnostic v0.11.3 (*)
+    │       │   │   ├── bevy_gilrs v0.11.3 (*)
+    │       │   │   ├── bevy_internal v0.11.3 (*)
+    │       │   │   └── bevy_render v0.11.3 (*)
+    │       │   ├── bevy_transform v0.11.3 (*)
+    │       │   ├── bevy_ui v0.11.3 (*)
+    │       │   ├── bevy_window v0.11.3 (*)
+    │       │   └── bevy_winit v0.11.3 (*)
+    │       ├── bevy_asset v0.11.3 (*)
+    │       ├── bevy_audio v0.11.3 (*)
+    │       ├── bevy_core v0.11.3 (*)
+    │       ├── bevy_core_pipeline v0.11.3 (*)
+    │       ├── bevy_ecs v0.11.3
+    │       │   ├── bevy_a11y v0.11.3 (*)
+    │       │   ├── bevy_animation v0.11.3 (*)
+    │       │   ├── bevy_app v0.11.3 (*)
+    │       │   ├── bevy_asset v0.11.3 (*)
+    │       │   ├── bevy_audio v0.11.3 (*)
+    │       │   ├── bevy_core v0.11.3 (*)
+    │       │   ├── bevy_core_pipeline v0.11.3 (*)
+    │       │   ├── bevy_diagnostic v0.11.3 (*)
+    │       │   ├── bevy_gilrs v0.11.3 (*)
+    │       │   ├── bevy_gizmos v0.11.3 (*)
+    │       │   ├── bevy_gltf v0.11.3 (*)
+    │       │   ├── bevy_hierarchy v0.11.3 (*)
+    │       │   ├── bevy_input v0.11.3 (*)
+    │       │   ├── bevy_internal v0.11.3 (*)
+    │       │   ├── bevy_log v0.11.3 (*)
+    │       │   ├── bevy_pbr v0.11.3 (*)
+    │       │   ├── bevy_render v0.11.3 (*)
+    │       │   ├── bevy_scene v0.11.3 (*)
+    │       │   ├── bevy_sprite v0.11.3 (*)
+    │       │   ├── bevy_text v0.11.3 (*)
+    │       │   ├── bevy_time v0.11.3 (*)
+    │       │   ├── bevy_transform v0.11.3 (*)
+    │       │   ├── bevy_ui v0.11.3 (*)
+    │       │   ├── bevy_window v0.11.3 (*)
+    │       │   └── bevy_winit v0.11.3 (*)
+    │       ├── bevy_gizmos v0.11.3 (*)
+    │       ├── bevy_gltf v0.11.3 (*)
+    │       ├── bevy_hierarchy v0.11.3 (*)
+    │       ├── bevy_input v0.11.3 (*)
+    │       ├── bevy_internal v0.11.3 (*)
+    │       ├── bevy_pbr v0.11.3 (*)
+    │       ├── bevy_render v0.11.3 (*)
+    │       ├── bevy_scene v0.11.3 (*)
+    │       ├── bevy_sprite v0.11.3 (*)
+    │       ├── bevy_text v0.11.3 (*)
+    │       ├── bevy_time v0.11.3 (*)
+    │       ├── bevy_transform v0.11.3 (*)
+    │       ├── bevy_ui v0.11.3 (*)
+    │       └── bevy_window v0.11.3 (*)
+    ├── naga v0.12.3
+    │   ├── bevy_render v0.11.3 (*)
+    │   ├── naga_oil v0.8.2
+    │   │   ├── bevy_pbr v0.11.3 (*)
+    │   │   └── bevy_render v0.11.3 (*)
+    │   ├── wgpu v0.16.3 (*)
+    │   ├── wgpu-core v0.16.1 (*)
+    │   └── wgpu-hal v0.16.2
+    │       ├── bevy_render v0.11.3 (*)
+    │       ├── wgpu v0.16.3 (*)
+    │       └── wgpu-core v0.16.1 (*)
+    └── naga_oil v0.8.2 (*)
+
+bitflags v1.3.2
+├── alsa v0.7.1
+│   └── cpal v0.15.2
+│       └── rodio v0.17.3
+│           └── bevy_audio v0.11.3 (*)
+├── gpu-alloc v0.5.4
+│   └── wgpu-hal v0.16.2 (*)
+├── gpu-alloc-types v0.2.0
+│   └── gpu-alloc v0.5.4 (*)
+├── inotify v0.9.6
+│   └── notify v6.1.1
+│       └── bevy_asset v0.11.3 (*)
+├── inotify v0.10.2
+│   └── gilrs-core v0.5.10
+│       └── gilrs v0.10.4
+│           └── bevy_gilrs v0.11.3 (*)
+├── ktx2 v0.3.0
+│   └── bevy_render v0.11.3 (*)
+├── naga v0.12.3 (*)
+├── nix v0.24.3
+│   └── alsa v0.7.1 (*)
+├── png v0.17.11
+│   └── image v0.24.8
+│       └── bevy_render v0.11.3 (*)
+├── spirv v0.2.0+1.5.4
+│   └── naga v0.12.3 (*)
+└── winit v0.28.7
+    ├── accesskit_winit v0.14.4
+    │   └── bevy_winit v0.11.3 (*)
+    └── bevy_winit v0.11.3 (*)
+
+bitflags v2.4.2
+├── bevy_core_pipeline v0.11.3 (*)
+├── bevy_pbr v0.11.3 (*)
+├── bevy_render v0.11.3 (*)
+├── bevy_sprite v0.11.3 (*)
+├── gpu-descriptor v0.2.4
+│   └── wgpu-hal v0.16.2 (*)
+├── gpu-descriptor-types v0.1.2
+│   └── gpu-descriptor v0.2.4 (*)
+├── nix v0.27.1
+│   ├── bluer v0.16.1
+│   │   └── protocol v0.1.0 (/home/alessio/Documents/universita/3.1/embedded/BatBot/src/common/protocol)
+│   │       └── project-visualizer v0.1.0 (/home/alessio/Documents/universita/3.1/embedded/BatBot/src/pc/project-visualizer)
+│   └── gilrs-core v0.5.10 (*)
+├── ron v0.8.1 (*)
+├── wgpu-core v0.16.1 (*)
+├── wgpu-hal v0.16.2 (*)
+└── wgpu-types v0.16.1
+    ├── wgpu v0.16.3 (*)
+    ├── wgpu-core v0.16.1 (*)
+    └── wgpu-hal v0.16.2 (*)
+
+bitflags v2.4.2
+├── bindgen v0.69.2
+│   [build-dependencies]
+│   └── protocol v0.1.0 (/home/alessio/Documents/universita/3.1/embedded/BatBot/src/common/protocol) (*)
+└── rustix v0.38.30
+    └── which v4.4.2
+        └── bindgen v0.69.2 (*)
+
+either v1.9.0
+└── rayon v1.8.1
+    └── protocol v0.1.0 (/home/alessio/Documents/universita/3.1/embedded/BatBot/src/common/protocol) (*)
+
+either v1.9.0
+└── which v4.4.2 (*)
+
+event-listener v2.5.3
+├── async-channel v1.9.0
+│   ├── bevy_asset v0.11.3 (*)
+│   ├── bevy_ecs v0.11.3 (*)
+│   ├── bevy_render v0.11.3 (*)
+│   └── bevy_tasks v0.11.3
+│       ├── bevy_app v0.11.3 (*)
+│       ├── bevy_asset v0.11.3 (*)
+│       ├── bevy_core v0.11.3 (*)
+│       ├── bevy_ecs v0.11.3 (*)
+│       ├── bevy_gltf v0.11.3 (*)
+│       ├── bevy_internal v0.11.3 (*)
+│       ├── bevy_render v0.11.3 (*)
+│       └── bevy_winit v0.11.3 (*)
+└── bevy_ecs v0.11.3 (*)
+
+event-listener v4.0.3
+├── async-lock v3.3.0
+│   └── async-executor v1.8.0
+│       └── bevy_tasks v0.11.3 (*)
+└── event-listener-strategy v0.4.0
+    └── async-lock v3.3.0 (*)
+
+fastrand v1.9.0
+├── bevy_asset v0.11.3 (*)
+└── futures-lite v1.13.0
+    ├── bevy_render v0.11.3 (*)
+    └── bevy_tasks v0.11.3 (*)
+
+fastrand v2.0.1
+└── async-executor v1.8.0 (*)
+
+futures-lite v1.13.0 (*)
+
+futures-lite v2.2.0
+└── async-executor v1.8.0 (*)
+
+getrandom v0.2.12
+└── uuid v1.6.1
+    ├── bevy_reflect_derive v0.11.3 (proc-macro) (*)
+    ├── bevy_scene v0.11.3 (*)
+    ├── bevy_utils v0.11.3
+    │   ├── bevy_animation v0.11.3 (*)
+    │   ├── bevy_app v0.11.3 (*)
+    │   ├── bevy_asset v0.11.3 (*)
+    │   ├── bevy_audio v0.11.3 (*)
+    │   ├── bevy_core v0.11.3 (*)
+    │   ├── bevy_core_pipeline v0.11.3 (*)
+    │   ├── bevy_diagnostic v0.11.3 (*)
+    │   ├── bevy_ecs v0.11.3 (*)
+    │   ├── bevy_gilrs v0.11.3 (*)
+    │   ├── bevy_gizmos v0.11.3 (*)
+    │   ├── bevy_gltf v0.11.3 (*)
+    │   ├── bevy_hierarchy v0.11.3 (*)
+    │   ├── bevy_input v0.11.3 (*)
+    │   ├── bevy_internal v0.11.3 (*)
+    │   ├── bevy_log v0.11.3 (*)
+    │   ├── bevy_pbr v0.11.3 (*)
+    │   ├── bevy_reflect v0.11.3 (*)
+    │   ├── bevy_render v0.11.3 (*)
+    │   ├── bevy_scene v0.11.3 (*)
+    │   ├── bevy_sprite v0.11.3 (*)
+    │   ├── bevy_text v0.11.3 (*)
+    │   ├── bevy_time v0.11.3 (*)
+    │   ├── bevy_ui v0.11.3 (*)
+    │   ├── bevy_window v0.11.3 (*)
+    │   └── bevy_winit v0.11.3 (*)
+    ├── bluer v0.16.1 (*)
+    ├── gilrs v0.10.4 (*)
+    └── gilrs-core v0.5.10 (*)
+    [build-dependencies]
+    └── bluer v0.16.1 (*)
+
+getrandom v0.2.12
+├── ahash v0.8.7
+│   ├── bevy_utils v0.11.3 (*)
+│   └── hashbrown v0.14.3
+│       ├── bevy_utils v0.11.3 (*)
+│       └── gpu-descriptor v0.2.4 (*)
+└── rand_core v0.6.4
+    ├── rand v0.8.5
+    │   ├── project-visualizer v0.1.0 (/home/alessio/Documents/universita/3.1/embedded/BatBot/src/pc/project-visualizer)
+    │   └── protocol v0.1.0 (/home/alessio/Documents/universita/3.1/embedded/BatBot/src/common/protocol) (*)
+    └── rand_chacha v0.3.1
+        └── rand v0.8.5 (*)
+
+hashbrown v0.12.3
+└── indexmap v1.9.3
+    ├── naga v0.12.3 (*)
+    └── naga_oil v0.8.2 (*)
+
+hashbrown v0.14.3 (*)
+
+hashbrown v0.14.3
+└── indexmap v2.1.0
+    ├── petgraph v0.6.4
+    │   └── bevy_utils v0.11.3 (*)
+    └── toml_edit v0.19.15
+        └── bevy_macro_utils v0.11.3
+            ├── bevy_derive v0.11.3 (proc-macro)
+            │   ├── bevy_a11y v0.11.3 (*)
+            │   ├── bevy_app v0.11.3 (*)
+            │   ├── bevy_audio v0.11.3 (*)
+            │   ├── bevy_core_pipeline v0.11.3 (*)
+            │   ├── bevy_internal v0.11.3 (*)
+            │   ├── bevy_pbr v0.11.3 (*)
+            │   ├── bevy_render v0.11.3 (*)
+            │   ├── bevy_scene v0.11.3 (*)
+            │   ├── bevy_sprite v0.11.3 (*)
+            │   ├── bevy_ui v0.11.3 (*)
+            │   └── bevy_winit v0.11.3 (*)
+            ├── bevy_ecs_macros v0.11.3 (proc-macro)
+            │   └── bevy_ecs v0.11.3 (*)
+            ├── bevy_encase_derive v0.11.3 (proc-macro)
+            │   └── bevy_render v0.11.3 (*)
+            ├── bevy_reflect_derive v0.11.3 (proc-macro) (*)
+            └── bevy_render_macros v0.11.3 (proc-macro)
+                └── bevy_render v0.11.3 (*)
+
+indexmap v1.9.3 (*)
+
+indexmap v2.1.0 (*)
+
+inotify v0.9.6 (*)
+
+inotify v0.10.2 (*)
+
+libc v0.2.152
+├── clang-sys v1.7.0
+│   └── bindgen v0.69.2 (*)
+└── getrandom v0.2.12 (*)
+
+libc v0.2.152
+├── alsa v0.7.1 (*)
+├── alsa-sys v0.3.1
+│   └── alsa v0.7.1 (*)
+├── bluer v0.16.1 (*)
+├── cpal v0.15.2 (*)
+├── dbus v0.9.7
+│   ├── bluer v0.16.1 (*)
+│   ├── dbus-crossroads v0.5.2
+│   │   └── bluer v0.16.1 (*)
+│   └── dbus-tokio v0.7.6
+│       └── bluer v0.16.1 (*)
+├── dbus-tokio v0.7.6 (*)
+├── filetime v0.2.23
+│   └── notify v6.1.1 (*)
+├── getrandom v0.2.12 (*)
+├── gilrs-core v0.5.10 (*)
+├── inotify v0.9.6 (*)
+├── inotify v0.10.2 (*)
+├── inotify-sys v0.1.5
+│   ├── inotify v0.9.6 (*)
+│   └── inotify v0.10.2 (*)
+├── khronos-egl v4.1.0
+│   └── wgpu-hal v0.16.2 (*)
+├── libudev-sys v0.1.4
+│   └── gilrs-core v0.5.10 (*)
+├── mio v0.8.10
+│   ├── notify v6.1.1 (*)
+│   ├── tokio v1.35.1
+│   │   ├── bluer v0.16.1 (*)
+│   │   ├── dbus-tokio v0.7.6 (*)
+│   │   ├── protocol v0.1.0 (/home/alessio/Documents/universita/3.1/embedded/BatBot/src/common/protocol) (*)
+│   │   └── tokio-stream v0.1.14
+│   │       └── bluer v0.16.1 (*)
+│   └── winit v0.28.7 (*)
+├── nix v0.24.3 (*)
+├── nix v0.27.1 (*)
+├── notify v6.1.1 (*)
+├── num_cpus v1.16.0
+│   └── tokio v1.35.1 (*)
+├── parking_lot_core v0.9.9
+│   └── parking_lot v0.12.1
+│       ├── bevy_asset v0.11.3 (*)
+│       ├── bevy_audio v0.11.3 (*)
+│       ├── bevy_reflect v0.11.3 (*)
+│       ├── bevy_render v0.11.3 (*)
+│       ├── cpal v0.15.2 (*)
+│       ├── wgpu v0.16.3 (*)
+│       ├── wgpu-core v0.16.1 (*)
+│       └── wgpu-hal v0.16.2 (*)
+├── rand v0.8.5 (*)
+├── socket2 v0.5.5
+│   └── tokio v1.35.1 (*)
+├── sysinfo v0.29.11
+│   └── bevy_diagnostic v0.11.3 (*)
+├── tokio v1.35.1 (*)
+├── wgpu-hal v0.16.2 (*)
+├── winit v0.28.7 (*)
+└── x11-dl v2.21.0
+    └── winit v0.28.7 (*)
+
+libloading v0.7.4
+├── ash v0.37.3+1.3.251
+│   └── wgpu-hal v0.16.2 (*)
+└── khronos-egl v4.1.0 (*)
+
+libloading v0.8.1
+├── clang-sys v1.7.0 (*)
+└── wgpu-hal v0.16.2 (*)
+
+log v0.4.20
+└── bindgen v0.69.2 (*)
+
+log v0.4.20
+├── bluer v0.16.1 (*)
+├── gilrs v0.10.4 (*)
+├── gilrs-core v0.5.10 (*)
+├── mio v0.8.10 (*)
+├── naga v0.12.3 (*)
+├── notify v6.1.1 (*)
+├── tracing-log v0.1.4
+│   └── bevy_log v0.11.3 (*)
+├── tracing-log v0.2.0
+│   └── tracing-subscriber v0.3.18
+│       └── bevy_log v0.11.3 (*)
+├── wgpu v0.16.3 (*)
+├── wgpu-core v0.16.1 (*)
+├── wgpu-hal v0.16.2 (*)
+└── winit v0.28.7 (*)
+
+memchr v2.7.1
+├── aho-corasick v1.1.2
+│   ├── regex v1.10.2
+│   │   ├── bevy_render v0.11.3 (*)
+│   │   ├── naga_oil v0.8.2 (*)
+│   │   └── tracing-subscriber v0.3.18 (*)
+│   └── regex-automata v0.4.3
+│       └── regex v1.10.2 (*)
+├── futures-lite v1.13.0 (*)
+├── futures-util v0.3.30
+│   ├── dbus v0.9.7 (*)
+│   ├── futures v0.3.30
+│   │   ├── bluer v0.16.1 (*)
+│   │   └── protocol v0.1.0 (/home/alessio/Documents/universita/3.1/embedded/BatBot/src/common/protocol) (*)
+│   └── futures-executor v0.3.30
+│       └── futures v0.3.30 (*)
+├── regex v1.10.2 (*)
+└── regex-automata v0.4.3 (*)
+
+memchr v2.7.1
+└── nom v7.1.3
+    └── cexpr v0.6.0
+        └── bindgen v0.69.2 (*)
+
+nix v0.24.3 (*)
+
+nix v0.27.1 (*)
+
+regex v1.10.2 (*)
+
+regex v1.10.2
+└── bindgen v0.69.2 (*)
+
+regex-automata v0.1.10
+└── matchers v0.1.0
+    └── tracing-subscriber v0.3.18 (*)
+
+regex-automata v0.4.3 (*)
+
+regex-automata v0.4.3
+└── regex v1.10.2 (*)
+
+regex-syntax v0.6.29
+├── naga_oil v0.8.2 (*)
+└── regex-automata v0.1.10 (*)
+
+regex-syntax v0.8.2
+├── regex v1.10.2 (*)
+└── regex-automata v0.4.3 (*)
+
+regex-syntax v0.8.2
+├── regex v1.10.2 (*)
+└── regex-automata v0.4.3 (*)
+
+serde_json v1.0.111
+├── bevy_gltf v0.11.3 (*)
+├── gltf v1.4.0
+│   └── bevy_gltf v0.11.3 (*)
+└── gltf-json v1.4.0
+    └── gltf v1.4.0 (*)
+
+serde_json v1.0.111
+[build-dependencies]
+└── bluer v0.16.1 (*)
+
+syn v1.0.109
+├── custom_debug_derive v0.5.1 (proc-macro)
+│   └── custom_debug v0.5.1
+│       └── bluer v0.16.1 (*)
+└── synstructure v0.12.6
+    └── custom_debug_derive v0.5.1 (proc-macro) (*)
+
+syn v2.0.48
+├── bevy_derive v0.11.3 (proc-macro) (*)
+├── bevy_ecs_macros v0.11.3 (proc-macro) (*)
+├── bevy_macro_utils v0.11.3 (*)
+├── bevy_reflect_derive v0.11.3 (proc-macro) (*)
+├── bevy_render_macros v0.11.3 (proc-macro) (*)
+├── bevy_utils_proc_macros v0.11.3 (proc-macro)
+│   └── bevy_utils v0.11.3 (*)
+├── bindgen v0.69.2 (*)
+├── bytemuck_derive v1.5.0 (proc-macro)
+│   └── bytemuck v1.14.0
+│       ├── bevy_core v0.11.3 (*)
+│       ├── bevy_pbr v0.11.3 (*)
+│       ├── bevy_render v0.11.3 (*)
+│       ├── bevy_sprite v0.11.3 (*)
+│       ├── bevy_ui v0.11.3 (*)
+│       ├── glam v0.24.2
+│       │   ├── bevy_math v0.11.3
+│       │   │   ├── bevy_animation v0.11.3 (*)
+│       │   │   ├── bevy_audio v0.11.3 (*)
+│       │   │   ├── bevy_core v0.11.3 (*)
+│       │   │   ├── bevy_core_pipeline v0.11.3 (*)
+│       │   │   ├── bevy_gizmos v0.11.3 (*)
+│       │   │   ├── bevy_gltf v0.11.3 (*)
+│       │   │   ├── bevy_input v0.11.3 (*)
+│       │   │   ├── bevy_internal v0.11.3 (*)
+│       │   │   ├── bevy_pbr v0.11.3 (*)
+│       │   │   ├── bevy_reflect v0.11.3 (*)
+│       │   │   ├── bevy_render v0.11.3 (*)
+│       │   │   ├── bevy_sprite v0.11.3 (*)
+│       │   │   ├── bevy_text v0.11.3 (*)
+│       │   │   ├── bevy_transform v0.11.3 (*)
+│       │   │   ├── bevy_ui v0.11.3 (*)
+│       │   │   ├── bevy_window v0.11.3 (*)
+│       │   │   └── bevy_winit v0.11.3 (*)
+│       │   ├── bevy_mikktspace v0.11.3
+│       │   │   └── bevy_render v0.11.3 (*)
+│       │   ├── bevy_reflect v0.11.3 (*)
+│       │   ├── encase v0.6.1
+│       │   │   └── bevy_render v0.11.3 (*)
+│       │   └── hexasphere v9.1.0
+│       │       └── bevy_render v0.11.3 (*)
+│       └── image v0.24.8 (*)
+├── displaydoc v0.2.4 (proc-macro)
+│   └── bluer v0.16.1 (*)
+├── encase_derive_impl v0.6.1
+│   ├── bevy_encase_derive v0.11.3 (proc-macro) (*)
+│   └── encase_derive v0.6.1 (proc-macro)
+│       └── encase v0.6.1 (*)
+├── futures-macro v0.3.30 (proc-macro)
+│   └── futures-util v0.3.30 (*)
+├── gltf-derive v1.4.0 (proc-macro)
+│   └── gltf-json v1.4.0 (*)
+├── num-derive v0.4.1 (proc-macro)
+│   └── bluer v0.16.1 (*)
+├── pin-project-internal v1.1.3 (proc-macro)
+│   └── pin-project v1.1.3
+│       └── bluer v0.16.1 (*)
+├── prettyplease v0.2.16
+│   └── bindgen v0.69.2 (*)
+├── serde_derive v1.0.195 (proc-macro)
+│   ├── gltf-json v1.4.0 (*)
+│   ├── ron v0.8.1 (*)
+│   └── serde v1.0.195
+│       ├── bevy_asset v0.11.3 (*)
+│       ├── bevy_core_pipeline v0.11.3 (*)
+│       ├── bevy_ecs v0.11.3 (*)
+│       ├── bevy_gltf v0.11.3 (*)
+│       ├── bevy_math v0.11.3 (*)
+│       ├── bevy_reflect v0.11.3 (*)
+│       ├── bevy_render v0.11.3 (*)
+│       ├── bevy_scene v0.11.3 (*)
+│       ├── bevy_text v0.11.3 (*)
+│       ├── bevy_ui v0.11.3 (*)
+│       ├── bitflags v2.4.2 (*)
+│       ├── bluer v0.16.1 (*)
+│       ├── erased-serde v0.3.31
+│       │   └── bevy_reflect v0.11.3 (*)
+│       ├── glam v0.24.2 (*)
+│       ├── gltf-json v1.4.0 (*)
+│       ├── hashbrown v0.14.3 (*)
+│       ├── ron v0.8.1 (*)
+│       ├── serde_json v1.0.111 (*)
+│       ├── serde_json v1.0.111 (*)
+│       ├── smallvec v1.12.0
+│       │   ├── bevy_hierarchy v0.11.3 (*)
+│       │   ├── bevy_reflect v0.11.3 (*)
+│       │   ├── bevy_render v0.11.3 (*)
+│       │   ├── bevy_ui v0.11.3 (*)
+│       │   ├── parking_lot_core v0.9.9 (*)
+│       │   ├── tracing-subscriber v0.3.18 (*)
+│       │   ├── wgpu v0.16.3 (*)
+│       │   ├── wgpu-core v0.16.1 (*)
+│       │   └── wgpu-hal v0.16.2 (*)
+│       └── uuid v1.6.1 (*)
+│       [build-dependencies]
+│       └── bluer v0.16.1 (*)
+├── strum_macros v0.25.3 (proc-macro)
+│   └── strum v0.25.0
+│       └── bluer v0.16.1 (*)
+├── thiserror-core-impl v1.0.50 (proc-macro)
+│   └── thiserror-core v1.0.50
+│       └── ruzstd v0.4.0
+│           └── bevy_render v0.11.3 (*)
+├── thiserror-impl v1.0.56 (proc-macro)
+│   └── thiserror v1.0.56
+│       ├── bevy_asset v0.11.3 (*)
+│       ├── bevy_ecs v0.11.3 (*)
+│       ├── bevy_gilrs v0.11.3 (*)
+│       ├── bevy_gltf v0.11.3 (*)
+│       ├── bevy_input v0.11.3 (*)
+│       ├── bevy_reflect v0.11.3 (*)
+│       ├── bevy_render v0.11.3 (*)
+│       ├── bevy_scene v0.11.3 (*)
+│       ├── bevy_sprite v0.11.3 (*)
+│       ├── bevy_text v0.11.3 (*)
+│       ├── bevy_time v0.11.3 (*)
+│       ├── bevy_ui v0.11.3 (*)
+│       ├── bevy_utils v0.11.3 (*)
+│       ├── encase v0.6.1 (*)
+│       ├── naga v0.12.3 (*)
+│       ├── naga_oil v0.8.2 (*)
+│       ├── wgpu-core v0.16.1 (*)
+│       └── wgpu-hal v0.16.2 (*)
+├── tokio-macros v2.2.0 (proc-macro)
+│   └── tokio v1.35.1 (*)
+└── tracing-attributes v0.1.27 (proc-macro)
+    └── tracing v0.1.40
+        ├── bevy_utils v0.11.3 (*)
+        ├── naga_oil v0.8.2 (*)
+        └── tracing-subscriber v0.3.18 (*)
+
+tracing-log v0.1.4 (*)
+
+tracing-log v0.2.0 (*)

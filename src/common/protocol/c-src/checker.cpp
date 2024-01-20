@@ -1,6 +1,6 @@
 #include"checker.hpp"
 
-#include"protocol.hpp"
+//#include"protocol.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 /*Checker new_checker(){
