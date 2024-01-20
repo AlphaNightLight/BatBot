@@ -1,10 +1,14 @@
+#[cfg(feature = "rfcomm")]
+mod bluetooth;
+#[cfg(feature = "rfcomm")]
+pub use bluetooth::Bluetooth;
+
+#[cfg(feature = "test-serial")]
 mod testserial;
-mod bluetooth2;
+#[cfg(feature = "test-serial")]
+pub use testserial::TestSerial;
 
 use std::ffi::c_void;
-
-pub use testserial::TestSerial;
-pub use bluetooth2::Bluetooth;
 
 ///Serial interface
 ///

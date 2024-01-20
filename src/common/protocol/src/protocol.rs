@@ -1,9 +1,8 @@
 use std::{
-    alloc::{alloc_zeroed, dealloc, Layout, handle_alloc_error},
+    alloc::{alloc_zeroed, dealloc, handle_alloc_error, Layout},
     ffi::c_void,
     marker::PhantomData,
     ops::{Deref, DerefMut},
-    ptr::{self, addr_of_mut}, mem::size_of,
 };
 
 use crate::{
@@ -33,11 +32,11 @@ impl<S: Serial> Protocol<S> {
             *t = s;*/
             //let t = &mut s as *mut S;
             let t = data as *mut S;
-            
+
             //addr_of_mut!(t).write(&s);
             //println!("coping {} bytes {:p}->{:p} {:p}", size_of::<S>(),&s, data, t);
             t.write(s);
-           // *(t) = s;
+            // *(t) = s;
             //println!("copied");
             //*t=s;
             p.init(

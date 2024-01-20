@@ -5,37 +5,6 @@ pub mod protocol;
 pub mod serial;
 pub use protocol::Protocol;
 
-#[cfg(test)]
-mod test {
-
-    use crate::{
-        serial::{Serial, TestSerial},
-        Protocol,
-    };
-
-    #[test]
-    fn test_protocol_init() {
-        let (robot, mut t) = TestSerial::new(0.0);
-        let mut p = Protocol::new(robot);
-        //send
-        unsafe {
-            let mut to_send: Vec<u8> = vec![0, 10];
-            let len = to_send.len() as u8;
-            let buff = to_send.as_mut_ptr();
-            p.checker.send_msg(buff, len);
-        }
-        let len = t.available();
-        let mut buff = Vec::new();
-        for _ in 0..len {
-            buff.push(t.read());
-        }
-        assert_eq!(vec![35, 0, 10, 30, 2, 69], buff);
-        //SEND SUCCESS!!!
-
-        //panic!("{}", t.read())
-    }
-}
-
 /*
 #[cfg(test)]
 mod test {

@@ -6,21 +6,39 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rand = "0.8"
-rayon = "1.8"
 
-bluer = { version = "0.16.1", features = ["rfcomm", "bluetoothd", "full"], default-features = false }
+bluer = { version = "0.16.1", default-features = false, optional=true}
  #features = ["bluetoothd"], default-features = false }
-tokio = { version = "1.35.1", features =["rt-multi-thread"]}
+tokio = { version = "1.35.1", features =["rt-multi-thread"], default-features=false, optional=true}
+rand = {version="0.8", optional = true}
+rayon = {version="1.8", optional = true}
 futures = "0.3"
 
 [lib]
 
-[[bin]]
-name = "main"
-
-[[bin]]
-name = "test-bl"
+#[[bin]]
+#name = "main"
 
 [build-dependencies]
 bindgen = "0.69"
+
+[features]
+default=["rfcomm", "test-serial"]
+"rfcomm"=["dep:bluer", "bluer/rfcomm", "tokio"]
+"test-serial"=["dep:rayon", "dep:rand"]
+
+[dev-dependencies]
+rand = "0.8"
+#bluer = { version = "0.16.1", features = ["rfcomm"], default-features = false}
+ #features = ["bluetoothd"], default-features = false }
+#tokio = { version = "1.35.1", features =["rt-multi-thread"], default-features=false}
+
+[[example]]
+name = "test-bl"
+crate-type = ["bin"]
+required-features = ["rfcomm"]
+
+#[[example]]
+#name = "test-serial-protocol"
+#crate-type = ["bin"]
+#required-features = ["test-serial"]
