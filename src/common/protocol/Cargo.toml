@@ -12,7 +12,7 @@ tokio = { version = "1.35.1", features =["rt-multi-thread"], default-features=fa
 futures = {version="0.3", optional = true}
 
 #things for test-serial
-rand = {version="0.8", optional = true}
+rand = {version="0.8"}#, optional = true}
 rayon = {version="1.8", optional = true}
 
 [build-dependencies]
@@ -21,10 +21,11 @@ bindgen = "0.69"
 
 
 [features]
-
-default=["rfcomm", "test-serial"]
-rfcomm=["dep:bluer", "bluer/rfcomm", "tokio", "dep:futures"]
-test-serial=["dep:rayon", "dep:rand"]
+default=["ble"]
+#default=["rfcomm", "test-serial"]
+ble=["dep:bluer", "bluer/bluetoothd", "dep:tokio", "dep:futures"]
+rfcomm=["dep:bluer", "bluer/rfcomm", "dep:tokio", "dep:futures"]
+test-serial=["dep:rayon"]
 
 
 
@@ -34,3 +35,7 @@ name = "test-bl"
 crate-type = ["bin"]
 required-features = ["rfcomm"]
 
+[[example]]
+name = "test-ble"
+crate-type = ["bin"]
+required-features = ["ble"]

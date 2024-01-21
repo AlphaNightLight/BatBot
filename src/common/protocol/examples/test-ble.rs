@@ -1,23 +1,26 @@
-use std::time::Instant;
+use std::{time::{Instant, Duration}, thread::sleep};
 
-use bluer::Address;
+use bluer::{Address, Uuid};
 use rand::{rngs::OsRng, Rng};
 use tokio::runtime::Runtime;
 
 use protocol::{
-    serial::{Bluetooth, Serial},
+    serial::{Ble, Serial},
     Protocol,
 };
 fn main() {
     let runtime = Runtime::new().unwrap();
-    let mut bl = Bluetooth::try_new(
-        Address::new([0x00, 0x18, 0x91, 0xD8, 0xE9, 0xC7]),
+    let mut bl = Ble::try_new(
+        //A8:10:87:67:73:2A
+        Address::new([0xA8, 0x10, 0x87, 0x67, 0x73, 0x2A]),
+        //0000ffe0-0000-1000-8000-00805f9b34fb
+        Uuid::from_bytes([0x00, 0x00, 0xFF, 0xE0, 0x00, 0x00, 0x10, 0x00, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB]),
         runtime.handle().clone(),
     )
     .unwrap();
     bl.send(0);
-    let mut protocol = Protocol::new(bl);
-    let length = 40;
+    let mut protocol: Protocol<Ble> = Protocol::new(bl);
+    let length = 194;
     let mut corretti = 0;
     let mut falsi_positivi = 0;
     let mut totali = 0;
@@ -28,7 +31,7 @@ fn main() {
         send(&mut protocol, &mut to_send);
         //corretti+=1;
 
-        for _ in 0..10 {
+        for _ in 0..1000 {
             //println!("tentativo");
             if let Some(readen) = read(&mut protocol) {
                 if to_send.iter().zip(readen.iter()).all(|(x, y)| *x == *y) {
@@ -38,6 +41,8 @@ fn main() {
                     falsi_positivi += 1;
                 }
             }
+            sleep(Duration::from_millis(1));
+
         }
         totali += 1;
         println!(
@@ -58,13 +63,16 @@ fn send<S: Serial>(robot: &mut Protocol<S>, to_send: &mut [u8]) {
 }
 
 fn read<S: Serial>(pc: &mut Protocol<S>) -> Option<Vec<u8>> {
+    
     //for _ in 0..20{
     unsafe {
         while pc.checker.try_read_message() {
+            
             let v = pc.checker.out_buffer.to_vec();
             pc.checker.out_buffer.iter_mut().for_each(|m| *m = 0);
             return Some(v);
         }
+        //sleep(Duration::from_millis(10));
     }
     //}
     None

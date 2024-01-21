@@ -8,6 +8,11 @@ mod testserial;
 #[cfg(feature = "test-serial")]
 pub use testserial::TestSerial;
 
+#[cfg(feature = "ble")]
+mod bluetooth_low_energy;
+#[cfg(feature = "ble")]
+pub use bluetooth_low_energy::Ble;
+
 use std::ffi::c_void;
 
 ///Serial interface

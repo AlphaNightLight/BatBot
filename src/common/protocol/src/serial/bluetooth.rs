@@ -19,7 +19,7 @@ pub struct Bluetooth {
 }
 impl Bluetooth {
     /// Function to get a new bluetooth device
-    /// 
+    ///
     /// it must be called with the desired bluetooth address, and an handle to a tokio runtime
     ///  
     pub fn try_new(address: Address, handle: Handle) -> Result<Self, Box<dyn Error>> {
