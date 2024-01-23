@@ -1,8 +1,11 @@
-use std::{error::Error, collections::VecDeque};
+use std::{collections::VecDeque, error::Error};
 
-use bluer::{AdapterEvent, Address, Uuid, Device, gatt::{CharacteristicReader, CharacteristicWriter}};
+use bluer::{
+    gatt::{CharacteristicReader, CharacteristicWriter},
+    AdapterEvent, Address, Device, Uuid,
+};
 use futures::{pin_mut, StreamExt};
-use tokio::{runtime::Handle, io::AsyncWriteExt};
+use tokio::{io::AsyncWriteExt, runtime::Handle};
 
 use super::Serial;
 
@@ -10,11 +13,16 @@ use super::Serial;
 pub struct Ble {
     to_send: Vec<u8>,
     handle: Handle,
-    device: Device,
     reader: CharacteristicReader,
-    //reader: Receiver<u8>,
     writer: CharacteristicWriter,
     read_buffer: VecDeque<u8>,
+    address: Address,
+    service_uuid: Uuid,
+}
+
+struct PreBle {
+    reader: CharacteristicReader,
+    writer: CharacteristicWriter,
 }
 impl Ble {
     /// Function to get a new bluetooth device
@@ -26,30 +34,35 @@ impl Ble {
         service_uuid: Uuid,
         handle: Handle,
     ) -> Result<Self, Box<dyn Error>> {
-        let (reader, writer, device) = handle.block_on(async { discover(address, service_uuid).await })?;
-        let mut ret = Self {
+        let ble = handle.block_on(async { discover(address, service_uuid).await })?;
+        let ret = Self {
             to_send: Vec::new(),
             handle,
-            writer,
-            reader,
-            device,
+            writer: ble.writer,
+            reader: ble.reader,
             read_buffer: VecDeque::new(),
+            address,
+            service_uuid,
         };
-        ret.send(0);
         Ok(ret)
+    }
+    pub fn connect(&self) -> Result<Self, Box<dyn Error>> {
+        let address = self.address;
+        let service_uuid = self.service_uuid;
+        let handle = self.handle.clone();
+        Self::try_new(address, service_uuid, handle)
     }
 }
 
 /// trying to connect to the device 5 times
-async fn connect(device: &Device)->Result<(), Box<dyn Error>>{
+async fn connect(device: &Device) -> Result<(), Box<dyn Error>> {
     if !device.is_connected().await? {
-        for _ in 0..4{
+        for _ in 0..4 {
             match device.connect().await {
                 Ok(()) => return Ok(()),
-                Err(err)=> {
+                Err(err) => {
                     println!("    Connect error: {}", &err);
                 }
-                
             }
         }
         Err("impossible to connect")?
@@ -58,9 +71,27 @@ async fn connect(device: &Device)->Result<(), Box<dyn Error>>{
         Ok(())
     }
 }
+async fn get_characteristic(device: Device, service_uuid: Uuid) -> Result<PreBle, Box<dyn Error>> {
+    println!("getting services");
+    for service in device.services().await? {
+        println!("{:?}", service.uuid().await);
+        if service_uuid != service.uuid().await.unwrap() {
+            continue;
+        }
+        println!("{:?}", service.uuid().await);
+        let c = service.characteristics().await?.into_iter().next().unwrap();
+        let r = c.notify_io().await?;
+        let w = c.write_io().await?;
+        return Ok(PreBle {
+            reader: r,
+            writer: w,
+        });
+    }
+    todo!()
+}
 
 /// let's try to connect to this device
-async fn discover(address: Address, service_uuid: Uuid) -> Result<(CharacteristicReader, CharacteristicWriter, Device), Box<dyn Error>> {
+async fn discover(address: Address, service_uuid: Uuid) -> Result<PreBle, Box<dyn Error>> {
     println!("ble discovery");
     let session = bluer::Session::new().await?;
     let adapter = session.default_adapter().await?;
@@ -72,7 +103,7 @@ async fn discover(address: Address, service_uuid: Uuid) -> Result<(Characteristi
         adapter.name(),
         adapter.address().await?
     );
-    
+
     // start scan
     //adapter.set_discovery_filter(bluer::DiscoveryFilter { uuids: HashSet::from_iter(vec![service_uuid]), transport: bluer::DiscoveryTransport::Le, ..Default::default() }).await?;
     let discover = adapter.discover_devices().await?;
@@ -89,21 +120,7 @@ async fn discover(address: Address, service_uuid: Uuid) -> Result<(Characteristi
                 println!("device {:?} {:?}", device, device.name().await);
                 //starting connection
                 connect(&device).await?;
-
-                
-                println!("getting services");
-                for service in device.services().await? {
-                    println!("{:?}", service.uuid().await);
-                    if service_uuid!=service.uuid().await.unwrap(){
-                        continue;
-                    }
-                    println!("{:?}", service.uuid().await);
-                    let c = service.characteristics().await?.into_iter().next().unwrap();
-                    let n = c.notify_io().await?;
-                    let w = c.write_io().await?;
-                    return Ok((n, w, device));
-                    
-                }
+                return get_characteristic(device.clone(), service_uuid).await;
             }
             AdapterEvent::DeviceRemoved(addr) => {
                 println!("Removed device {addr}");
@@ -118,18 +135,23 @@ impl Serial for Ble {
     fn flush(&mut self) {
         //println!("{}", self.writer.mtu());
         let mtu = self.writer.mtu();
-            self.to_send.chunks(mtu).for_each(|x|{
-                self.handle.block_on(async {
-                    let _ =self.writer.write_all(x).await;
-                });
+        self.to_send.chunks(mtu).for_each(|x| {
+            self.handle.block_on(async {
+                let _ = self.writer.write_all(x).await;
             });
+        });
         self.to_send.clear();
-        
+        /*self.handle.block_on(async{
+            if !self.device.is_connected().await.unwrap(){
+                self.
+                get_characteristic(device, service_uuid)
+            }
+        });*/
         /*self.handle.block_on(async {
-            
-           
+
+
             //
-            
+
             self.writer.flush().await.unwrap();
             //self..flush().await.unwrap()
         });*/
@@ -146,12 +168,11 @@ impl Serial for Ble {
     }
 
     fn available(&mut self) -> i32 {
-        if let Ok(x) = self.reader.try_recv(){
+        if let Ok(x) = self.reader.try_recv() {
             self.read_buffer.extend(x);
         }
-        match self.reader.try_recv(){
-            Ok(x) => self.read_buffer.extend(x),
-            Err(x) =>{},
+        if let Ok(x) = self.reader.try_recv() {
+            self.read_buffer.extend(x)
         }
         self.read_buffer.len() as i32
     }

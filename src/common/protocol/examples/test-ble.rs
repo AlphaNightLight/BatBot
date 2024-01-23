@@ -1,25 +1,34 @@
-use std::{time::{Instant, Duration}, thread::sleep};
+use std::{
+    error::Error,
+    thread::sleep,
+    time::{Duration, Instant},
+};
 
 use bluer::{Address, Uuid};
 use rand::{rngs::OsRng, Rng};
-use tokio::runtime::Runtime;
+use tokio::runtime::{Handle, Runtime};
 
 use protocol::{
     serial::{Ble, Serial},
     Protocol,
 };
-fn main() {
-    let runtime = Runtime::new().unwrap();
-    let mut bl = Ble::try_new(
+fn new_protocol(handle: Handle) -> Result<Protocol<Ble>, Box<dyn Error>> {
+    let bl = Ble::try_new(
         //A8:10:87:67:73:2A
         Address::new([0xA8, 0x10, 0x87, 0x67, 0x73, 0x2A]),
         //0000ffe0-0000-1000-8000-00805f9b34fb
-        Uuid::from_bytes([0x00, 0x00, 0xFF, 0xE0, 0x00, 0x00, 0x10, 0x00, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB]),
-        runtime.handle().clone(),
-    )
-    .unwrap();
-    bl.send(0);
-    let mut protocol: Protocol<Ble> = Protocol::new(bl);
+        Uuid::from_bytes([
+            0x00, 0x00, 0xFF, 0xE0, 0x00, 0x00, 0x10, 0x00, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B,
+            0x34, 0xFB,
+        ]),
+        handle,
+    )?;
+    let protocol: Protocol<Ble> = Protocol::new(bl);
+    Ok(protocol)
+}
+fn main() {
+    let runtime = Runtime::new().unwrap();
+    let mut protocol = new_protocol(runtime.handle().clone()).unwrap();
     let length = 194;
     let mut corretti = 0;
     let mut falsi_positivi = 0;
@@ -31,7 +40,7 @@ fn main() {
         send(&mut protocol, &mut to_send);
         //corretti+=1;
 
-        for _ in 0..1000 {
+        for i in 0..1000 {
             //println!("tentativo");
             if let Some(readen) = read(&mut protocol) {
                 if to_send.iter().zip(readen.iter()).all(|(x, y)| *x == *y) {
@@ -42,8 +51,13 @@ fn main() {
                 }
             }
             sleep(Duration::from_millis(1));
-
+            if i == 999 {
+                if let Ok(x) = new_protocol(runtime.handle().clone()) {
+                    protocol = x;
+                }
+            }
         }
+
         totali += 1;
         println!(
             "{corretti} {falsi_positivi} {totali} {} {:.0} baud used {:.2} msg/s",
@@ -63,11 +77,9 @@ fn send<S: Serial>(robot: &mut Protocol<S>, to_send: &mut [u8]) {
 }
 
 fn read<S: Serial>(pc: &mut Protocol<S>) -> Option<Vec<u8>> {
-    
     //for _ in 0..20{
     unsafe {
         while pc.checker.try_read_message() {
-            
             let v = pc.checker.out_buffer.to_vec();
             pc.checker.out_buffer.iter_mut().for_each(|m| *m = 0);
             return Some(v);
