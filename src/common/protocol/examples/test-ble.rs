@@ -34,6 +34,7 @@ fn main() {
     let mut falsi_positivi = 0;
     let mut totali = 0;
     let start = Instant::now();
+    let mut invalid=0;
     loop {
         let mut to_send: Vec<u8> = (0..length).map(|_| OsRng.gen()).collect();
         //println!("sent");
@@ -43,8 +44,10 @@ fn main() {
         for i in 0..1000 {
             //println!("tentativo");
             if let Some(readen) = read(&mut protocol) {
+                invalid=0;
                 if to_send.iter().zip(readen.iter()).all(|(x, y)| *x == *y) {
                     corretti += 1;
+                    
                     break;
                 } else {
                     falsi_positivi += 1;
@@ -52,9 +55,15 @@ fn main() {
             }
             sleep(Duration::from_millis(1));
             if i == 999 {
+                invalid+=1;
+                if invalid<5{
+                    continue;
+                }
                 if let Ok(x) = new_protocol(runtime.handle().clone()) {
                     protocol = x;
+                    invalid=0;
                 }
+                
             }
         }
 
