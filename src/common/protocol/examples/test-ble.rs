@@ -40,8 +40,8 @@ fn main() {
         //println!("sent");
         send(&mut protocol, &mut to_send);
         //corretti+=1;
-
-        for i in 0..1000 {
+        let l= 2000;
+        for i in 0..l {
             //println!("tentativo");
             if let Some(readen) = read(&mut protocol) {
                 invalid=0;
@@ -54,9 +54,9 @@ fn main() {
                 }
             }
             sleep(Duration::from_millis(1));
-            if i == 999 {
+            if i == l-1 {
                 invalid+=1;
-                if invalid<5{
+                if invalid<3{
                     continue;
                 }
                 if let Ok(x) = new_protocol(runtime.handle().clone()) {
