@@ -6,7 +6,7 @@ use std::{
 };
 
 use crate::{
-    generated,
+    generated::{self, new_serial_hal},
     serial::{CSerial, Serial},
 };
 
@@ -27,32 +27,21 @@ impl<S: Serial> Protocol<S> {
             if data.is_null() {
                 handle_alloc_error(layout);
             }
-            /*let t = &mut s as *mut S;
-            ptr::copy(t as *mut u8, data, core::mem::size_of::<S>());
-            *t = s;*/
-            //let t = &mut s as *mut S;
             let t = data as *mut S;
-
-            //addr_of_mut!(t).write(&s);
-            //println!("coping {} bytes {:p}->{:p} {:p}", size_of::<S>(),&s, data, t);
+            //we don't want to deallocate what it was previously here
             t.write(s);
-            // *(t) = s;
-            //println!("copied");
-            //*t=s;
-            p.init(
-                data as *mut c_void,
+            let mut serial_hal = new_serial_hal();
+            serial_hal.init1(data as *mut c_void,
                 Some(S::unsafe_available),
                 Some(S::unsafe_send),
                 Some(S::unsafe_read),
-                Some(S::unsafe_flush),
+                Some(S::unsafe_flush),);
+            p.init(
+                serial_hal
             );
             Self { p, ph: PhantomData }
         }
     }
-
-    /*pub fn inner(&mut self) -> &mut generated::Protocol {
-        &mut self.p
-    }*/
 }
 
 impl<S: Serial> Deref for Protocol<S> {
@@ -71,7 +60,7 @@ impl<S: Serial> DerefMut for Protocol<S> {
 impl<S: Serial> Drop for Protocol<S> {
     fn drop(&mut self) {
         let layout = Layout::new::<S>();
-        let ptr = self.p.checker.data as *mut u8;
+        let ptr = self.p.checker.serial.data as *mut u8;
         unsafe {
             dealloc(ptr, layout);
         }

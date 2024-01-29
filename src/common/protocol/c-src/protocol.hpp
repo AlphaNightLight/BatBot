@@ -2,7 +2,7 @@
 #define custom_protocol
 
 #include"checker.hpp"
-
+#include"hal.hpp"
 typedef enum msg_type {Ok, SpawnWall, Joystick} msg_type;
 
 class Protocol{ 
@@ -10,7 +10,8 @@ class Protocol{
          
     public:
         Checker checker;
-        void init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *), void (*inner_flush)(void*));
+        void init(SerialHal);
+        //void init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *), void (*inner_flush)(void*));
         /*unsigned char buffer [BUFFER_SIZE];
         unsigned int pos=0; 
         void send(unsigned char);

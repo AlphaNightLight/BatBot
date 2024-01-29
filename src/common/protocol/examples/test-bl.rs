@@ -17,7 +17,7 @@ fn main() {
     .unwrap();
     bl.send(0);
     let mut protocol = Protocol::new(bl);
-    let length = 40;
+    let length = 194;
     let mut corretti = 0;
     let mut falsi_positivi = 0;
     let mut totali = 0;

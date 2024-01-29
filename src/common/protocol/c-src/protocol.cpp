@@ -1,7 +1,10 @@
 #include"protocol.hpp"
 
-void Protocol::init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *), void (*inner_flush)(void*)){
+/*void Protocol::init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *), void (*inner_flush)(void*)){
     this->checker.init(data, inner_available, inner_send, inner_read, inner_flush);
+}*/
+void Protocol::init(SerialHal serial){
+    this->checker.init(serial);
 }
 Protocol new_protocol(){
     Protocol t;

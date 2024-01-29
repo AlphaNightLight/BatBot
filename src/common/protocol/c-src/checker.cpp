@@ -9,18 +9,18 @@
 }*/
 
 void Checker::send_msg(unsigned char* buff, unsigned char len){
-    this->send(START_SYMBOL);
+    this->serial.send(START_SYMBOL);
     unsigned char chksm=MAGIC_NUMBER;
     for(unsigned char i=0; i<len; i++){
-        this->send(buff[i]);
+        this->serial.send(buff[i]);
         chksm+=buff[i];
     }
-    this->send(chksm);
-    this->send(len);
-    this->send(END_SYMBOL);
-    this->flush();
+    this->serial.send(chksm);
+    this->serial.send(len);
+    this->serial.send(END_SYMBOL);
+    this->serial.flush();
 }
-
+/*
 void Checker::send(unsigned char t){
     this->inner_send(this->data, t);
 }
@@ -33,7 +33,7 @@ unsigned char Checker::read(){
 }
 void Checker::flush(){
     this->inner_flush(this->data);
-}
+}*/
 
 int move(int pos){
     return (pos+BUFFER_SIZE)%BUFFER_SIZE;
@@ -41,7 +41,7 @@ int move(int pos){
 
 bool Checker::try_read_message(){
     //reading all available bytes
-    int max = this->available();
+    int max = this->serial.available();
     for(int i=0; i<max; i++){
         //printf("%d/%d %d\n", i, max, this->pos);
         //fflush(stdout);
@@ -54,7 +54,7 @@ bool Checker::try_read_message(){
         if(pos>BUFFER_SIZE){
             exit(-1);
         }
-        this->buffer[pos]=this->read();
+        this->buffer[pos]=this->serial.read();
         /*printf("readen %d\n", this->buffer[pos]);
         fflush(stdout);*/
         //check if a message could end here
@@ -90,6 +90,7 @@ bool Checker::try_read_message(){
     return false;
 }
 
+/*
 void Checker::init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *), void (*inner_flush)(void*)){
     this->data=data;
     this->pos=0;
@@ -97,4 +98,7 @@ void Checker::init(void *data, int (*inner_available)(void *), void (*inner_send
     this->inner_send=inner_send;
     this->inner_read=inner_read;
     this->inner_flush=inner_flush;
+}*/
+void Checker::init(SerialHal serial){
+    this->serial=serial;
 }

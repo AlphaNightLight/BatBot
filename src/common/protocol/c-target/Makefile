@@ -15,7 +15,7 @@ libc-protocol.a: $(TARGETS)
 	ar rcs libc-protocol.a $(TARGETS)
 
 %.o : $(SRC_FOLDER)/%.cpp
-	clang -MD -MP -Wall -O3 -o $@ -c $(SRC_FOLDER)/$*.cpp
+	clang -MD -MP -Wall -Oz -o $@ -c $(SRC_FOLDER)/$*.cpp
 #$(SRC_FOLDER)/$*.cpp
 #$^ 
 #$(DEP)
