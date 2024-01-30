@@ -29,20 +29,30 @@ void setup() {
   for(int i=0; i<40; i++){
     buffer[i]=0;
   }
+  for(int i=0; i<10; i++){
+      Serial.write(0xff);
+    }
   time=millis();
 }
 
 int count =0;
 
 void loop() {
-  if(millis()-time>=14){
+  if(millis()-time>=20){
     time=millis();
     count ++;
     sprintf((char *) buffer , "it works %d", count);
     int len=strlen((char * )buffer);
     //buffer[len]=0;
+    /*for(int i=0; i<21-len; i++){
+      Serial.write(0x11);
+    }*/
     protocol.checker.send_msg(buffer, len);
-    delay(1);
+    
+    
+    //Serial.write(0xff);
+    
   }
+  delay(1);
   
 }

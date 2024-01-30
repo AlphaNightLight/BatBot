@@ -185,10 +185,7 @@ impl Serial for Ble {
         }else{
             self.wrong_wave+=1;
         }
-        if let Ok(x) = self.reader.try_recv() {
-            self.read_buffer.extend(x)
-        }
-        if self.wrong_wave>500{
+        if self.wrong_wave>1000{
             println!("reconnection");
             let _ =self.device.connect();
             self.wrong_wave=0;
