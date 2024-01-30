@@ -18,11 +18,14 @@ pub struct Ble {
     read_buffer: VecDeque<u8>,
     address: Address,
     service_uuid: Uuid,
+    device: Device,
+    wrong_wave: usize,
 }
 
 struct PreBle {
     reader: CharacteristicReader,
     writer: CharacteristicWriter,
+    device: Device,
 }
 impl Ble {
     /// Function to get a new bluetooth device
@@ -43,6 +46,8 @@ impl Ble {
             read_buffer: VecDeque::new(),
             address,
             service_uuid,
+            device: ble.device,
+            wrong_wave: 0,
         };
         Ok(ret)
     }
@@ -73,6 +78,8 @@ async fn connect(device: &Device) -> Result<(), Box<dyn Error>> {
 }
 async fn get_characteristic(device: Device, service_uuid: Uuid) -> Result<PreBle, Box<dyn Error>> {
     println!("getting services");
+    device.set_trusted(true).await?;
+    //println!("{:?}", device.services().await?);
     for service in device.services().await? {
         println!("{:?}", service.uuid().await);
         if service_uuid != service.uuid().await.unwrap() {
@@ -80,14 +87,18 @@ async fn get_characteristic(device: Device, service_uuid: Uuid) -> Result<PreBle
         }
         println!("{:?}", service.uuid().await);
         let c = service.characteristics().await?.into_iter().next().unwrap();
+        //println!("notify");
         let r = c.notify_io().await?;
+        //println!("write");
         let w = c.write_io().await?;
+        
         return Ok(PreBle {
             reader: r,
             writer: w,
+            device,
         });
     }
-    todo!()
+    Err("can't get characteristics")?
 }
 
 /// let's try to connect to this device
@@ -117,6 +128,7 @@ async fn discover(address: Address, service_uuid: Uuid) -> Result<PreBle, Box<dy
 
                 // if another device connected, let's try to find our characteristics
                 let device = adapter.device(addr)?;
+                
                 println!("device {:?} {:?}", device, device.name().await);
                 //starting connection
                 connect(&device).await?;
@@ -170,9 +182,16 @@ impl Serial for Ble {
     fn available(&mut self) -> i32 {
         if let Ok(x) = self.reader.try_recv() {
             self.read_buffer.extend(x);
+        }else{
+            self.wrong_wave+=1;
         }
         if let Ok(x) = self.reader.try_recv() {
             self.read_buffer.extend(x)
+        }
+        if self.wrong_wave>500{
+            println!("reconnection");
+            let _ =self.device.connect();
+            self.wrong_wave=0;
         }
         self.read_buffer.len() as i32
     }

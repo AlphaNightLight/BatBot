@@ -9,7 +9,7 @@ use rand::{rngs::OsRng, Rng};
 use tokio::runtime::{Handle, Runtime};
 
 use protocol::{
-    serial::{Ble, Serial},
+    serial::Ble,
     Protocol,
 };
 fn new_protocol(handle: Handle) -> Result<Protocol<Ble>, Box<dyn Error>> {
@@ -34,36 +34,35 @@ fn main() {
     let mut falsi_positivi = 0;
     let mut totali = 0;
     let start = Instant::now();
-    let mut invalid=0;
+    let mut invalid = 0;
     loop {
         let mut to_send: Vec<u8> = (0..length).map(|_| OsRng.gen()).collect();
         //println!("sent");
-        send(&mut protocol, &mut to_send);
+        protocol.send(&mut to_send);
         //corretti+=1;
-        let l= 2000;
+        let l = 2000;
         for i in 0..l {
             //println!("tentativo");
-            if let Some(readen) = read(&mut protocol) {
-                invalid=0;
+            if let Some(readen) = protocol.read() {
+                invalid = 0;
                 if to_send.iter().zip(readen.iter()).all(|(x, y)| *x == *y) {
                     corretti += 1;
-                    
+
                     break;
                 } else {
                     falsi_positivi += 1;
                 }
             }
             sleep(Duration::from_millis(1));
-            if i == l-1 {
-                invalid+=1;
-                if invalid<3{
+            if i == l - 1 {
+                invalid += 1;
+                if invalid < 3 {
                     continue;
                 }
                 if let Ok(x) = new_protocol(runtime.handle().clone()) {
                     protocol = x;
-                    invalid=0;
+                    invalid = 0;
                 }
-                
             }
         }
 
@@ -76,25 +75,4 @@ fn main() {
         );
         //println!("{:?} {:?}", to_send, &readen[0..length]);
     }
-}
-fn send<S: Serial>(robot: &mut Protocol<S>, to_send: &mut [u8]) {
-    unsafe {
-        let len = to_send.len() as u8;
-        let buff = to_send.as_mut_ptr();
-        robot.checker.send_msg(buff, len);
-    }
-}
-
-fn read<S: Serial>(pc: &mut Protocol<S>) -> Option<Vec<u8>> {
-    //for _ in 0..20{
-    unsafe {
-        while pc.checker.try_read_message() {
-            let v = pc.checker.out_buffer.to_vec();
-            pc.checker.out_buffer.iter_mut().for_each(|m| *m = 0);
-            return Some(v);
-        }
-        //sleep(Duration::from_millis(10));
-    }
-    //}
-    None
 }

@@ -60,7 +60,6 @@ impl Serial for TestSerial {
     }
 
     fn flush(&mut self) {
-        return;
     }
 }
 #[cfg(test)]

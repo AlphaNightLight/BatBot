@@ -25,12 +25,12 @@ fn main() {
     loop {
         let mut to_send: Vec<u8> = (0..length).map(|_| OsRng.gen()).collect();
         //println!("sent");
-        send(&mut protocol, &mut to_send);
+        protocol.send( &mut to_send);
         //corretti+=1;
 
         for _ in 0..10 {
             //println!("tentativo");
-            if let Some(readen) = read(&mut protocol) {
+            if let Some(readen) = protocol.read() {
                 if to_send.iter().zip(readen.iter()).all(|(x, y)| *x == *y) {
                     corretti += 1;
                     break;
@@ -48,24 +48,4 @@ fn main() {
         );
         //println!("{:?} {:?}", to_send, &readen[0..length]);
     }
-}
-fn send<S: Serial>(robot: &mut Protocol<S>, to_send: &mut [u8]) {
-    unsafe {
-        let len = to_send.len() as u8;
-        let buff = to_send.as_mut_ptr();
-        robot.checker.send_msg(buff, len);
-    }
-}
-
-fn read<S: Serial>(pc: &mut Protocol<S>) -> Option<Vec<u8>> {
-    //for _ in 0..20{
-    unsafe {
-        while pc.checker.try_read_message() {
-            let v = pc.checker.out_buffer.to_vec();
-            pc.checker.out_buffer.iter_mut().for_each(|m| *m = 0);
-            return Some(v);
-        }
-    }
-    //}
-    None
 }

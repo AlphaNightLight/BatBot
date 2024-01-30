@@ -27,7 +27,7 @@ impl Bluetooth {
         let mut ret = Self {
             to_send: Vec::new(),
             handle,
-            stream: stream,
+            stream,
         };
         ret.send(0);
         Ok(ret)
@@ -67,10 +67,9 @@ impl Serial for Bluetooth {
     }
 
     fn available(&mut self) -> i32 {
-        let ret = self.handle.block_on(async {
+        self.handle.block_on(async {
             let mut buf = [0u8; 100];
             self.stream.peek(&mut buf).await.unwrap() as i32
-        });
-        ret
+        })
     }
 }

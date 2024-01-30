@@ -21,10 +21,10 @@ bindgen ={version="0.69", default-features=false}
 [features]
 #default=["ble"]
 default=["rfcomm", "test-serial", "ble"]
-ble=["dep:bluer", "bluer/bluetoothd", "dep:tokio", "dep:futures"]
-rfcomm=["dep:bluer", "bluer/rfcomm", "dep:tokio", "dep:futures"]
+ble=["bluer", "bluer/bluetoothd", "dep:tokio", "dep:futures"]
+rfcomm=["bluer", "bluer/rfcomm", "dep:tokio", "dep:futures"]
 test-serial=["dep:rayon", "dep:rand"]
-
+bluer=["dep:bluer"]
 
 
 #example for testing simple send/receive to/from bluetooth (the bluetooth device must reply)
@@ -37,3 +37,10 @@ required-features = ["rfcomm"]
 name = "test-ble"
 crate-type = ["bin"]
 required-features = ["ble"]
+
+[profile.release]
+strip = true  # Automatically strip symbols from the binary.
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"

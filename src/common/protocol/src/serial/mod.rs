@@ -13,6 +13,11 @@ mod bluetooth_low_energy;
 #[cfg(feature = "ble")]
 pub use bluetooth_low_energy::Ble;
 
+#[cfg(feature = "bluer")]
+mod common_bl;
+#[cfg(feature = "bluer")]
+pub use common_bl::*;
+
 use std::ffi::c_void;
 
 ///Serial interface
@@ -81,3 +86,5 @@ impl<T: Serial> CSerial for T {
         T::flush(&mut *x);
     }
 }
+
+

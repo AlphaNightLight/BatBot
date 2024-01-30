@@ -16,6 +16,7 @@ class Checker{
         
     public:
         unsigned char out_buffer[OUT_BUFFER_SIZE];
+        int out_len=0;
         void send_msg(unsigned char* buff, unsigned char len);
         bool try_read_message();
         //void init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *), void (*inner_flush)(void*));

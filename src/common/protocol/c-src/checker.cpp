@@ -84,6 +84,7 @@ bool Checker::try_read_message(){
         if(chcksm!=readen_chcksm){
             continue;
         }
+        this->out_len=len;
         //we have a message TODO something
         return true;
     }
