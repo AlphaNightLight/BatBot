@@ -8,8 +8,9 @@ use bevy_aabb_instancing::{
     Cuboid, CuboidMaterial, CuboidMaterialMap, Cuboids, VertexPullingRenderPlugin, COLOR_MODE_RGB,
 };
 
+use ble_connector::BlePlugin;
 use rand::{thread_rng, Rng};
-
+mod ble_connector;
 mod car;
 mod infinite_grid;
 //use protocol::::*;
@@ -31,8 +32,11 @@ fn main() {
         //custom plugins
         .add_plugins(CarPlugin)
         .add_plugins(InfiniteGridPlugin)
+        .add_plugins(BlePlugin)
+
         .add_systems(Startup, setup)
         .add_systems(Update, spawn_wall_2);
+
     app.run();
 }
 
