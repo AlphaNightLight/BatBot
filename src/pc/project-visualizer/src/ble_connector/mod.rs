@@ -65,7 +65,7 @@ pub fn receive(mut res: NonSendMut<BleResource>, mut q: Query<&mut Cuboids>, mut
                 //println!("{pos:?}");
             }
             if let Ok(pos) = CarPosition::try_from(&data[..]) {
-                let (mut transform, mut car) = car.get_single_mut().unwrap();
+                let (_, mut car) = car.get_single_mut().unwrap();
                 car.obj=Vec3{x: pos.x, y: pos.z, z: pos.y};
                 car.angle_obj= pos.angle;
                 /*transform.translation.x=pos.x;

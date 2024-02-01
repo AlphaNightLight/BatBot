@@ -22,7 +22,7 @@ impl From<Joystick> for Vec<u8> {
             .x
             .to_le_bytes()
             .into_iter()
-            .chain(value.y.to_be_bytes().into_iter())
+            .chain(value.y.to_be_bytes())
             .collect()
     }
 }

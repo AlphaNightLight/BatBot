@@ -1,10 +1,11 @@
 use bevy::{
-    diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin}, input::InputPlugin, prelude::*, render::primitives::Aabb
+    diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin}, prelude::*, render::primitives::Aabb
 };
 
 use bevy_aabb_instancing::{
     Cuboid, CuboidMaterial, CuboidMaterialMap, Cuboids, VertexPullingRenderPlugin, COLOR_MODE_RGB,
 };
+use bevy_embedded_assets:: EmbeddedAssetPlugin;
 
 use ble_connector::BlePlugin;
 use input::InputsPlugin;
@@ -23,12 +24,17 @@ struct MySimCamera;
 fn main() {
     let mut app = App::new();
     app
+        //embedded plugin
+        .add_plugins( DefaultPlugins
+            .build()
+            .add_before::<bevy::asset::AssetPlugin, _>(EmbeddedAssetPlugin),)
         //defaulty plugins
-        .add_plugins(DefaultPlugins)
+        //.add_plugins(DefaultPlugins)
         .add_plugins(FrameTimeDiagnosticsPlugin {})
         .add_plugins(LogDiagnosticsPlugin::default())
         //aabb instancing plugin
         .add_plugins(VertexPullingRenderPlugin { outlines: true })
+        
         //custom plugins
         .add_plugins(CarPlugin)
         .add_plugins(InfiniteGridPlugin)
@@ -60,8 +66,9 @@ fn setup(
         .insert((cuboids, aabb, material_id));
 
     // note that we have to include the `Scene0` label
-    let my_gltf = ass.load("car.glb#Scene0");
-
+    let my_gltf = ass.load("car.glb#Scene0"); //
+    //let embedded = EmbeddedAssetIo::preloaded();
+    //let my_gltf = embedded.load_path_sync(&Path::new("car.glb#Scene0"));
     // to position our 3d model, simply use the Transform
     // in the SceneBundle
     commands

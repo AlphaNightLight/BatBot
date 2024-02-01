@@ -34,7 +34,7 @@ fn move_car(mut car: Query<(&mut Transform, &mut Car)>, timer: Res<Time>, inputs
     transform.rotate_local_y(car.rot_speed * timer.delta_seconds());
     transform.translation += forward * car.speed * timer.delta_seconds() * 8.;*/
 }
-
+/*
 /// process input from joystick and similar and
 fn input_car_update(
     gamepads: Res<Gamepads>,
@@ -69,7 +69,7 @@ fn input_car_update(
     if keys.pressed(KeyCode::D) {
         car.rot_speed -= 1.;
     }
-}
+}*/
 pub struct CarPlugin;
 
 impl Plugin for CarPlugin {
