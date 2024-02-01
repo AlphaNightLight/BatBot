@@ -1,7 +1,5 @@
 use bevy::{
-    diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
-    prelude::*,
-    render::primitives::Aabb,
+    diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin}, input::InputPlugin, prelude::*, render::primitives::Aabb
 };
 
 use bevy_aabb_instancing::{
@@ -9,10 +7,12 @@ use bevy_aabb_instancing::{
 };
 
 use ble_connector::BlePlugin;
+use input::InputsPlugin;
 use rand::{thread_rng, Rng};
 mod ble_connector;
 mod car;
 mod infinite_grid;
+mod input;
 //use protocol::::*;
 use car::{Car, CarPlugin};
 use infinite_grid::{InfiniteGrid, InfiniteGridPlugin};
@@ -33,9 +33,9 @@ fn main() {
         .add_plugins(CarPlugin)
         .add_plugins(InfiniteGridPlugin)
         .add_plugins(BlePlugin)
-
+        .add_plugins(InputsPlugin)
         .add_systems(Startup, setup)
-        .add_systems(Update, spawn_wall_2);
+        .add_systems(Update, spawn_wall_random);
 
     app.run();
 }
@@ -100,9 +100,9 @@ fn setup(
     });
 }
 
-fn spawn_wall_2(mut q: Query<&mut Cuboids>, keys: Res<Input<KeyCode>>) {
+fn spawn_wall_random(mut q: Query<&mut Cuboids>, keys: Res<Input<KeyCode>>) {
     if keys.pressed(KeyCode::I) {
-        let mut t = q.iter_mut().next().unwrap();
+        let mut t: Mut<'_, Cuboids> = q.iter_mut().next().unwrap();
         let mut rng = thread_rng();
         let mut v = Vec::new();
         let diff = Vec3::new(0.5, 0.5, 0.5);
@@ -112,7 +112,7 @@ fn spawn_wall_2(mut q: Query<&mut Cuboids>, keys: Res<Input<KeyCode>>) {
                 rng.gen_range(-1000.0..1000.),
                 rng.gen_range(-1000.0..1000.),
             );
-            
+
             let cuboid = Cuboid::new(pos - diff, pos + diff, (Color::WHITE * 0.5).as_rgba_u32());
             v.push(cuboid);
             //t.instances.push(cuboid);
@@ -121,4 +121,11 @@ fn spawn_wall_2(mut q: Query<&mut Cuboids>, keys: Res<Input<KeyCode>>) {
 
         println!("{}", t.instances.len());
     }
+}
+pub fn spawn_wall(mut cuboids: Mut<'_, Cuboids>, x: f32, y: f32, z: f32) {
+    let diff = Vec3::new(0.5, 0.5, 0.5);
+    let pos = Vec3::new(x, y, z);
+    let cuboid = Cuboid::new(pos - diff, pos + diff, (Color::WHITE * 0.5).as_rgba_u32());
+    //let mut t = q.iter_mut().next().unwrap();
+    cuboids.instances.push(cuboid);
 }
