@@ -46,8 +46,8 @@ void setup() {
 void loop() {
   if(millis()-last_cube>=30){
     last_cube=millis();
-    float x = ((float)random(1000))/300.0-1.5;
-    float y = ((float)random(1000))/300.0-.5;
+    float x = ((float)random(1000))/333.0-1.5;
+    float y = ((float)random(1000))/333.0-1.5;
     float z = 0.;//((float)random(1000))/1000.0;
     memcpy(buffer, &x, sizeof(float));
     memcpy(buffer+4, &y, sizeof(float));
@@ -75,7 +75,7 @@ void loop() {
     memcpy(buffer+8, &z, sizeof(float));
     memcpy(buffer+12, &angle, sizeof(float));
     protocol.checker.send_msg(buffer, 16);
-  }
+  } 
 
 
 

@@ -1,7 +1,8 @@
 mod data;
 use std::error::Error;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
+use bevy::ecs::system::InsertResource;
 use bevy::prelude::*;
 use bevy_aabb_instancing::Cuboids;
 use protocol::serial::tokio::runtime::Handle;
@@ -38,6 +39,8 @@ impl Default for BleResource {
             protocol,
             last_joystick: Instant::now(),
             unavailable_wave: 0,
+            blocks_instant: Instant::now(),
+            positions_instant: Instant::now(),
         }
     }
 }
@@ -47,24 +50,39 @@ pub struct BleResource {
     protocol: Protocol<Ble>,
     unavailable_wave: usize,
     last_joystick: Instant,
+    blocks_instant: Instant,
+    positions_instant: Instant,
+}
+#[derive(Resource, Default)]
+pub struct BleStatistics{
+    pub n_blocks: usize,
+    pub n_pos: usize,
+    pub dur_blocks: Duration,
+    pub dur_pos: Duration,
 }
 
 pub fn setup(world: &mut World) {
     world.insert_non_send_resource(BleResource::default())
 }
 
-pub fn receive(mut res: NonSendMut<BleResource>, mut q: Query<&mut Cuboids>, mut car: Query<(&mut Transform, &mut Car)>) {
+pub fn receive(mut res: NonSendMut<BleResource>, mut q: Query<&mut Cuboids>, mut car: Query<(&mut Transform, &mut Car)>, mut ble_stats: ResMut<BleStatistics>) {
     for _ in 0..10 {
         if let Some(data) = res.protocol.read() {
             //println!("{:?}", String::from_utf8(data.clone()));
             res.unavailable_wave = 0;
             if let Ok(pos) = Position::try_from(&data[..]) {
+                ble_stats.n_blocks+=1;
+                ble_stats.dur_blocks+=res.blocks_instant.elapsed();
+                res.blocks_instant=Instant::now();
                 let (t, _) = car.get_single().unwrap();
                 let cuboids = q.iter_mut().next().unwrap();
                 spawn_wall(cuboids, t.translation.x+pos.x, t.translation.y+pos.z, t.translation.z+pos.y);
-                //println!("{pos:?}");
+                //println!("{pos: ?}");  
             }
             if let Ok(pos) = CarPosition::try_from(&data[..]) {
+                ble_stats.n_pos+=1;
+                ble_stats.dur_pos+=res.positions_instant.elapsed();
+                res.positions_instant=Instant::now();
                 let (_, mut car) = car.get_single_mut().unwrap();
                 car.obj=Vec3{x: pos.x, y: pos.z, z: pos.y};
                 car.angle_obj= pos.angle;
@@ -104,6 +122,7 @@ impl Plugin for BlePlugin {
         app
             .add_systems(Startup, setup)
             .add_systems(Update, receive)
-            .add_systems(Update, send);
+            .add_systems(Update, send)
+            .insert_resource(BleStatistics::default());
     }
 }
