@@ -297,16 +297,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/IKS4A1/iks4a1_env_sensors_ex.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/IKS4A1/iks4a1_hybrid_sensors.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/IKS4A1/iks4a1_hybrid_sensors.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/IKS4A1/iks4a1_hybrid_sensors_ex.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/IKS4A1/iks4a1_hybrid_sensors_ex.c</locationURI>
-		</link>
-		<link>
 			<name>Drivers/BSP/IKS4A1/iks4a1_motion_sensors.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/IKS4A1/iks4a1_motion_sensors.c</locationURI>

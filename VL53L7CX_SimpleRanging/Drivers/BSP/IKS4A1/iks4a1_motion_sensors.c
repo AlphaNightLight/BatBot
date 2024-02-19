@@ -18,6 +18,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "iks4a1_motion_sensors.h"
+#include <stdio.h>
 
 /** @addtogroup BSP BSP
   * @{
