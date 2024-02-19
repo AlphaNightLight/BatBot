@@ -85,7 +85,8 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  printf("%c[2J", 27);
+  fflush(stdout);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -94,7 +95,9 @@ int main(void)
   MX_TOF_Init();
   MX_MEMS_Init();
   /* USER CODE BEGIN 2 */
-
+  MX_TOF_LoadDefaultConfig();
+  printf("%c[2J", 27);
+  fflush(stdout);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -102,7 +105,6 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  printf("loop\r\n");
     MX_TOF_Process();
     MX_MEMS_Process();
     /* USER CODE BEGIN 3 */

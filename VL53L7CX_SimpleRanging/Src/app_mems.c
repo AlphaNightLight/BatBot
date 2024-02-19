@@ -42,7 +42,7 @@ typedef struct displayFloatToInt_s {
 
 /* Private variables ---------------------------------------------------------*/
 static volatile uint8_t PushButtonDetected = 0;
-static uint8_t verbose = 1;  /* Verbose output to UART terminal ON/OFF. */
+static uint8_t verbose = 0;  /* Verbose output to UART terminal ON/OFF. */
 static IKS4A1_MOTION_SENSOR_Capabilities_t MotionCapabilities[IKS4A1_MOTION_INSTANCES_NBR];
 static IKS4A1_ENV_SENSOR_Capabilities_t EnvCapabilities[IKS4A1_ENV_INSTANCES_NBR];
 static char dataOut[MAX_BUF_SIZE];
@@ -247,8 +247,6 @@ void MX_IKS4A1_DataLogTerminal_Process(void)
       Press_Sensor_Handler(i);
     }
   }*/
-
-  HAL_Delay( 1000 );
 }
 
 /**
@@ -288,20 +286,24 @@ static void Accelero_Sensor_Handler(uint32_t Instance)
   displayFloatToInt_t out_value;
   uint8_t whoami;
 
-  snprintf(dataOut, MAX_BUF_SIZE, "\r\nMotion sensor instance %d:", (int)Instance);
+  snprintf(dataOut, MAX_BUF_SIZE, "\r\nMotion sensor instance %d: ", (int)Instance);
   printf("%s", dataOut);
 
   if (IKS4A1_MOTION_SENSOR_GetAxes(Instance, MOTION_ACCELERO, &acceleration))
   {
-    snprintf(dataOut, MAX_BUF_SIZE, "\r\nACC[%d]: Error\r\n", (int)Instance);
+    snprintf(dataOut, MAX_BUF_SIZE, "ACC[%d]: Error", (int)Instance);
   }
   else
   {
-    snprintf(dataOut, MAX_BUF_SIZE, "\r\nACC_X[%d]: %d, ACC_Y[%d]: %d, ACC_Z[%d]: %d\r\n", (int)Instance,
+    snprintf(dataOut, MAX_BUF_SIZE, "ACC_X[%d]: %07d, ACC_Y[%d]: %07d, ACC_Z[%d]: %07d", (int)Instance,
              (int)acceleration.x, (int)Instance, (int)acceleration.y, (int)Instance, (int)acceleration.z);
   }
 
-  printf("%s", dataOut);
+  if (verbose == 1) {
+	  printf("\r\n%s\r\n", dataOut);
+  } else {
+	  printf("%s", dataOut);
+  }
 
   if (verbose == 1)
   {
@@ -355,20 +357,24 @@ static void Gyro_Sensor_Handler(uint32_t Instance)
   displayFloatToInt_t out_value;
   uint8_t whoami;
 
-  snprintf(dataOut, MAX_BUF_SIZE, "\r\nMotion sensor instance %d:", (int)Instance);
+  snprintf(dataOut, MAX_BUF_SIZE, "\r\nMotion sensor instance %d: ", (int)Instance);
   printf("%s", dataOut);
 
   if (IKS4A1_MOTION_SENSOR_GetAxes(Instance, MOTION_GYRO, &angular_velocity))
   {
-    snprintf(dataOut, MAX_BUF_SIZE, "\r\nGYR[%d]: Error\r\n", (int)Instance);
+    snprintf(dataOut, MAX_BUF_SIZE, "GYR[%d]: Error", (int)Instance);
   }
   else
   {
-    snprintf(dataOut, MAX_BUF_SIZE, "\r\nGYR_X[%d]: %d, GYR_Y[%d]: %d, GYR_Z[%d]: %d\r\n", (int)Instance,
+    snprintf(dataOut, MAX_BUF_SIZE, "GYR_X[%d]: %07d, GYR_Y[%d]: %07d, GYR_Z[%d]: %07d", (int)Instance,
              (int)angular_velocity.x, (int)Instance, (int)angular_velocity.y, (int)Instance, (int)angular_velocity.z);
   }
 
-  printf("%s", dataOut);
+  if (verbose == 1) {
+	  printf("\r\n%s\r\n", dataOut);
+  } else {
+	  printf("%s", dataOut);
+  }
 
   if (verbose == 1)
   {

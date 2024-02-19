@@ -185,27 +185,35 @@ static void MX_VL53L7CX_SimpleRanging_Process(void)
   }
 }
 #else
+void MX_TOF_LoadDefaultConfig(void)
+{
+	  uint32_t Id;
+
+	  CUSTOM_RANGING_SENSOR_ReadID(CUSTOM_VL53L7CX, &Id);
+	  CUSTOM_RANGING_SENSOR_GetCapabilities(CUSTOM_VL53L7CX, &Cap);
+
+	  Profile.RangingProfile = RS_PROFILE_4x4_CONTINUOUS;
+	  Profile.TimingBudget = TIMING_BUDGET;
+	  Profile.Frequency = RANGING_FREQUENCY; /* Ranging frequency Hz (shall be consistent with TimingBudget value) */
+	  Profile.EnableAmbient = 0; /* Enable: 1, Disable: 0 */
+	  Profile.EnableSignal = 0; /* Enable: 1, Disable: 0 */
+
+	  /* set the profile if different from default one */
+	  CUSTOM_RANGING_SENSOR_ConfigProfile(CUSTOM_VL53L7CX, &Profile);
+
+	  status = CUSTOM_RANGING_SENSOR_Start(CUSTOM_VL53L7CX, RS_MODE_BLOCKING_CONTINUOUS);
+
+	  if (status != BSP_ERROR_NONE)
+	  {
+	    printf("MX_TOF_LoadDefaultConfig failed %ld\r\n", status);
+	    while (1);
+	  }
+}
+
 static void MX_VL53L7CX_SimpleRanging_Process(void)
 {
-  uint32_t Id;
-  static RANGING_SENSOR_Result_t Result;
+    static RANGING_SENSOR_Result_t Result;
 
-  CUSTOM_RANGING_SENSOR_ReadID(CUSTOM_VL53L7CX, &Id);
-  CUSTOM_RANGING_SENSOR_GetCapabilities(CUSTOM_VL53L7CX, &Cap);
-
-  Profile.RangingProfile = RS_PROFILE_4x4_CONTINUOUS;
-  Profile.TimingBudget = TIMING_BUDGET;
-  Profile.Frequency = RANGING_FREQUENCY; /* Ranging frequency Hz (shall be consistent with TimingBudget value) */
-  Profile.EnableAmbient = 0; /* Enable: 1, Disable: 0 */
-  Profile.EnableSignal = 0; /* Enable: 1, Disable: 0 */
-
-  /* set the profile if different from default one */
-  CUSTOM_RANGING_SENSOR_ConfigProfile(CUSTOM_VL53L7CX, &Profile);
-
-  status = CUSTOM_RANGING_SENSOR_Start(CUSTOM_VL53L7CX, RS_MODE_BLOCKING_CONTINUOUS);
-
-  while (1)
-  {
     /* polling mode */
     status = CUSTOM_RANGING_SENSOR_GetDistance(CUSTOM_VL53L7CX, &Result);
 
@@ -213,14 +221,15 @@ static void MX_VL53L7CX_SimpleRanging_Process(void)
     {
       print_result(&Result);
     }
+    else
+    {
+    	printf("MX_VL53L7CX_SimpleRanging_Process failed %ld\r\n", status);
+    }
 
     if (com_has_data())
     {
       handle_cmd(get_key());
     }
-
-    HAL_Delay(POLLING_PERIOD);
-  }
 }
 #endif /* USE_BARE_DRIVER */
 

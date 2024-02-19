@@ -32,6 +32,7 @@ extern "C" {
 
 /* Exported functions --------------------------------------------------------*/
 void MX_TOF_Init(void);
+void MX_TOF_LoadDefaultConfig(void);
 void MX_TOF_Process(void);
 
 #ifdef __cplusplus
