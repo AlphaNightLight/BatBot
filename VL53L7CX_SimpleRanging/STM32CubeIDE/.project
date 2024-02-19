@@ -37,6 +37,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/VL53L7CX_SimpleRanging.ioc</locationURI>
 		</link>
 		<link>
+			<name>Application/User/app_mems.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Src/app_mems.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/app_tof.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Src/app_tof.c</locationURI>
