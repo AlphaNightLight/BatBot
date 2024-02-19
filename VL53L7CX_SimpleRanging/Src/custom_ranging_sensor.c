@@ -18,6 +18,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "custom_ranging_sensor.h"
+#include <stdio.h>
 
 void *CUSTOM_RANGING_CompObj[CUSTOM_RANGING_INSTANCES_NBR] = {0};
 static RANGING_SENSOR_Drv_t *CUSTOM_RANGING_Drv[CUSTOM_RANGING_INSTANCES_NBR];
