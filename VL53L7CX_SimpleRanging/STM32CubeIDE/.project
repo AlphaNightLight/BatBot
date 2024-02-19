@@ -187,9 +187,79 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/BSP/Components/lis2duxs12.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/lis2duxs12/lis2duxs12.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/lis2duxs12_reg.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/lis2duxs12/lis2duxs12_reg.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/lis2mdl.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/lis2mdl/lis2mdl.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/lis2mdl_reg.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/lis2mdl/lis2mdl_reg.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/lps22df.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/lps22df/lps22df.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/lps22df_reg.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/lps22df/lps22df_reg.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/lsm6dso16is.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/lsm6dso16is/lsm6dso16is.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/lsm6dso16is_reg.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/lsm6dso16is/lsm6dso16is_reg.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/lsm6dsv16x.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/lsm6dsv16x/lsm6dsv16x.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/lsm6dsv16x_reg.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/lsm6dsv16x/lsm6dsv16x_reg.c</locationURI>
+		</link>
+		<link>
 			<name>Drivers/BSP/Components/platform.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/vl53l7cx/porting/platform.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/sht40ad1b.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/sht40ad1b/sht40ad1b.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/sht40ad1b_reg.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/sht40ad1b/sht40ad1b_reg.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/stts22h.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/stts22h/stts22h.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/stts22h_reg.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/stts22h/stts22h_reg.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/Components/vl53l7cx.c</name>
@@ -215,6 +285,36 @@
 			<name>Drivers/BSP/Components/vl53l7cx_plugin_xtalk.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/vl53l7cx/modules/vl53l7cx_plugin_xtalk.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/IKS4A1/iks4a1_env_sensors.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/IKS4A1/iks4a1_env_sensors.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/IKS4A1/iks4a1_env_sensors_ex.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/IKS4A1/iks4a1_env_sensors_ex.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/IKS4A1/iks4a1_hybrid_sensors.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/IKS4A1/iks4a1_hybrid_sensors.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/IKS4A1/iks4a1_hybrid_sensors_ex.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/IKS4A1/iks4a1_hybrid_sensors_ex.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/IKS4A1/iks4a1_motion_sensors.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/IKS4A1/iks4a1_motion_sensors.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/IKS4A1/iks4a1_motion_sensors_ex.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/IKS4A1/iks4a1_motion_sensors_ex.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/X-CUBE-TOF1/Documentation/LICENSE.txt</name>
