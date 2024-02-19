@@ -20,6 +20,7 @@
 #include "main.h"
 #include "app_tof.h"
 #include "app_mems.h"
+#include <stdio.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -101,7 +102,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	  printf("loop\r\n");
     MX_TOF_Process();
     MX_MEMS_Process();
     /* USER CODE BEGIN 3 */
