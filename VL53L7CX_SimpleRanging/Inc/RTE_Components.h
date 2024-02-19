@@ -22,7 +22,9 @@
 #define  __RTE_COMPONENTS_H__
 
 /* Defines ------------------------------------------------------------------*/
-/* STMicroelectronics.X-CUBE-TOF1.3.4.0 */
+/* STMicroelectronics.X-CUBE-MEMS1.10.0.0 */
+#define IKS4A1
+#define IKS4A1_DATALOGTERMINAL_DEMO
 #define VL53L7CX_SIMPLE_RANGING
 #define VL53L7CX
 #define BSP_RANGING_SENSOR

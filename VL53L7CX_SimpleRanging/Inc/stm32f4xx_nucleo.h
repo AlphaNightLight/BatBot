@@ -78,10 +78,55 @@
    #define USE_BSP_COM_FEATURE                  0U
 #endif
 
+/** @defgroup STM32F4XX_NUCLEO_LOW_LEVEL_LED STM32F4XX_NUCLEO LOW LEVEL LED
+ * @{
+ */
+/** Define number of LED            **/
+#define LEDn                              1U
+/**  Definition for BSP USER LED 2   **/
+#define LED2_PIN                     	  GPIO_PIN_5
+#define LED2_GPIO_PORT                    GPIOA
+#define LED2_GPIO_CLK_ENABLE()            __HAL_RCC_GPIOA_CLK_ENABLE()
+#define LED2_GPIO_CLK_DISABLE()           __HAL_RCC_GPIOA_CLK_DISABLE()
+
+#define BUS_GPIO_INSTANCE GPIO
+#define BUS_BSP_LED_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
+#define BUS_BSP_LED_GPIO_PORT GPIOA
+#define BUS_BSP_LED_GPIO_CLK_DISABLE() __HAL_RCC_GPIOA_CLK_DISABLE()
+#define BUS_BSP_LED_GPIO_PIN GPIO_PIN_5
+
 /**
  * @}
  */
 
+/** @defgroup STM32F4XX_NUCLEO_LOW_LEVEL_BUTTON STM32F4XX_NUCLEO LOW LEVEL BUTTON
+ * @{
+ */
+/* Button state */
+#define BUTTON_RELEASED                   0U
+#define BUTTON_PRESSED                    1U
+/** Define number of BUTTON            **/
+#define BUTTONn                           1U
+
+/**
+ * @brief User push-button
+ */
+  /**  Definition for BSP USER BUTTON   **/
+
+#define BUS_GPIO_INSTANCE GPIO
+#define BUS_BSP_BUTTON_GPIO_CLK_ENABLE() __HAL_RCC_GPIOC_CLK_ENABLE()
+#define BUS_BSP_BUTTON_GPIO_PIN GPIO_PIN_13
+#define BUS_BSP_BUTTON_GPIO_CLK_DISABLE() __HAL_RCC_GPIOC_CLK_DISABLE()
+#define BUS_BSP_BUTTON_GPIO_PORT GPIOC
+
+#define USER_BUTTON_PIN	                  GPIO_PIN_13
+#define USER_BUTTON_GPIO_PORT              GPIOC
+#define USER_BUTTON_EXTI_IRQn              EXTI15_10_IRQn
+#define USER_BUTTON_EXTI_LINE              EXTI_LINE_13
+#define H_EXTI_13			  hpb_exti[BUTTON_USER]
+/**
+ * @}
+ */
 /** @defgroup STM32F4XX_NUCLEO_LOW_LEVEL_COM STM32F4XX_NUCLEO LOW LEVEL COM
  * @{
  */
@@ -115,6 +160,30 @@
 #ifndef USE_COM_LOG
   #define USE_COM_LOG                           1U
 #endif
+
+#ifndef BSP_BUTTON_USER_IT_PRIORITY
+  #define BSP_BUTTON_USER_IT_PRIORITY            15U
+#endif
+
+typedef enum
+{
+  LED2 = 0,
+  LED_GREEN = LED2,
+}Led_TypeDef;
+
+typedef enum
+{
+  BUTTON_USER = 0U,
+}Button_TypeDef;
+
+/* Keep compatibility with CMSIS Pack already delivered */
+#define BUTTON_KEY BUTTON_USER
+
+typedef enum
+{
+  BUTTON_MODE_GPIO = 0,
+  BUTTON_MODE_EXTI = 1
+} ButtonMode_TypeDef;
 
 #if (USE_BSP_COM_FEATURE > 0)
 typedef enum
@@ -198,6 +267,7 @@ extern UART_HandleTypeDef hcom_uart[COMn];
 /** @defgroup STM32F4XX_NUCLEO_LOW_LEVEL_Exported_Variables LOW LEVEL Exported Constants
   * @{
   */
+extern EXTI_HandleTypeDef hpb_exti[BUTTONn];
 /**
   * @}
   */
@@ -207,6 +277,17 @@ extern UART_HandleTypeDef hcom_uart[COMn];
  */
 
 int32_t  BSP_GetVersion(void);
+int32_t  BSP_LED_Init(Led_TypeDef Led);
+int32_t  BSP_LED_DeInit(Led_TypeDef Led);
+int32_t  BSP_LED_On(Led_TypeDef Led);
+int32_t  BSP_LED_Off(Led_TypeDef Led);
+int32_t  BSP_LED_Toggle(Led_TypeDef Led);
+int32_t  BSP_LED_GetState(Led_TypeDef Led);
+int32_t  BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode);
+int32_t  BSP_PB_DeInit(Button_TypeDef Button);
+int32_t  BSP_PB_GetState(Button_TypeDef Button);
+void     BSP_PB_Callback(Button_TypeDef Button);
+void     BSP_PB_IRQHandler (Button_TypeDef Button);
 #if (USE_BSP_COM_FEATURE > 0)
 int32_t  BSP_COM_Init(COM_TypeDef COM);
 int32_t  BSP_COM_DeInit(COM_TypeDef COM);
