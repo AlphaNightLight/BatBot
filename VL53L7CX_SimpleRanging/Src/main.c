@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "app_tof.h"
+#include "app_mems.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -90,6 +91,7 @@ int main(void)
   MX_GPIO_Init();
   MX_RTC_Init();
   MX_TOF_Init();
+  MX_MEMS_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -100,7 +102,8 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-  MX_TOF_Process();
+    MX_TOF_Process();
+    MX_MEMS_Process();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
