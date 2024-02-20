@@ -52,7 +52,7 @@ int32_t CUSTOM_RANGING_SENSOR_Init(uint32_t Instance)
 #if (USE_CUSTOM_RANGING_VL53L7CX == 1U)
       case CUSTOM_VL53L7CX:
     	int32_t res = VL53L7CX_Probe(Instance);
-    	printf("VL53L7CX_Probe returned %ld\n", res);
+    	printf("VL53L7CX_Probe returned %ld\r\n", res);
         if (res != BSP_ERROR_NONE)
         {
           ret = BSP_ERROR_NO_INIT;

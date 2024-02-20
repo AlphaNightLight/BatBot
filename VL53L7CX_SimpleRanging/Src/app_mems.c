@@ -29,30 +29,13 @@ extern "C" {
 #include "stm32f4xx_nucleo.h"
 #include "math.h"
 
-/* Private typedef -----------------------------------------------------------*/
-typedef struct displayFloatToInt_s {
-  int8_t sign; /* 0 means positive, 1 means negative*/
-  uint32_t  out_int;
-  uint32_t  out_dec;
-} displayFloatToInt_t;
-
-/* Private define ------------------------------------------------------------*/
-#define MAX_BUF_SIZE 256
-
 /* Private variables ---------------------------------------------------------*/
 static volatile uint8_t PushButtonDetected = 0;
 static IKS4A1_MOTION_SENSOR_Capabilities_t MotionCapabilities[IKS4A1_MOTION_INSTANCES_NBR];
-static char dataOut[MAX_BUF_SIZE];
 
 void MX_MEMS_Init(void)
 {
-  int i;
-
-  /* Initialize Virtual COM Port */
-  BSP_COM_Init(COM1);
-
-  snprintf(dataOut, MAX_BUF_SIZE, "\r\n__________________________________________________________________________\r\n");
-  printf("%s", dataOut);
+  printf("\r\n__________________________________________________________________________\r\n");
 
   printf("A %ld\r\n", IKS4A1_MOTION_SENSOR_Init(IKS4A1_LSM6DSV16X_0, MOTION_ACCELERO | MOTION_GYRO));
 
@@ -62,7 +45,7 @@ void MX_MEMS_Init(void)
 
   //printf("D %ld\r\n", IKS4A1_MOTION_SENSOR_Init(IKS4A1_LIS2MDL_0, MOTION_MAGNETO));
 
-  for(i = 0; i < IKS4A1_MOTION_INSTANCES_NBR; i++)
+  for(int i = 0; i < IKS4A1_MOTION_INSTANCES_NBR; i++)
   {
     IKS4A1_MOTION_SENSOR_GetCapabilities(i, &MotionCapabilities[i]);
     printf("\r\nMotion Sensor Instance %d capabilities: \r\n ACCELEROMETER: %d\r\n GYROSCOPE: %d\r\n MAGNETOMETER: %d\r\n LOW POWER: %d\r\n",

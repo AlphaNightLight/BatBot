@@ -54,8 +54,6 @@ static uint8_t map_target_status(uint8_t status);
 static int32_t convert_data_format(VL53L7CX_Object_t *pObj,
                                    VL53L7CX_ResultsData *data, RANGING_SENSOR_Result_t *pResult);
 #endif
-static void MX_VL53L7CX_SimpleRanging_Init(void);
-static void MX_VL53L7CX_SimpleRanging_Process(void);
 static void print_result(RANGING_SENSOR_Result_t *Result);
 static void toggle_resolution(void);
 static void toggle_signal_and_ambient(void);
@@ -67,44 +65,6 @@ static uint32_t com_has_data(void);
 
 void MX_TOF_Init(void)
 {
-  /* USER CODE BEGIN SV */
-
-  /* USER CODE END SV */
-
-  /* USER CODE BEGIN TOF_Init_PreTreatment */
-
-  /* USER CODE END TOF_Init_PreTreatment */
-
-  /* Initialize the peripherals and the TOF components */
-
-  MX_VL53L7CX_SimpleRanging_Init();
-
-  /* USER CODE BEGIN TOF_Init_PostTreatment */
-
-  /* USER CODE END TOF_Init_PostTreatment */
-}
-
-/*
- * LM background task
- */
-void MX_TOF_Process(void)
-{
-  /* USER CODE BEGIN TOF_Process_PreTreatment */
-
-  /* USER CODE END TOF_Process_PreTreatment */
-
-  MX_VL53L7CX_SimpleRanging_Process();
-
-  /* USER CODE BEGIN TOF_Process_PostTreatment */
-
-  /* USER CODE END TOF_Process_PostTreatment */
-}
-
-static void MX_VL53L7CX_SimpleRanging_Init(void)
-{
-  /* Initialize Virtual COM Port */
-  BSP_COM_Init(COM1);
-
   status = CUSTOM_RANGING_SENSOR_Init(CUSTOM_VL53L7CX);
 
   if (status != BSP_ERROR_NONE)
@@ -114,77 +74,6 @@ static void MX_VL53L7CX_SimpleRanging_Init(void)
   }
 }
 
-#ifdef USE_BARE_DRIVER
-static void MX_VL53L7CX_SimpleRanging_Process(void)
-{
-  static RANGING_SENSOR_Result_t Result;
-  VL53L7CX_Object_t *pL5obj = CUSTOM_RANGING_CompObj[CUSTOM_VL53L7CX];
-  static VL53L7CX_ResultsData data;
-  uint8_t NewDataReady = 0;
-
-  Profile.RangingProfile = RS_PROFILE_4x4_CONTINUOUS;
-  Profile.TimingBudget = TIMING_BUDGET;
-  Profile.Frequency = RANGING_FREQUENCY; /* Ranging frequency Hz (shall be consistent with TimingBudget value) */
-  Profile.EnableAmbient = 0; /* Enable: 1, Disable: 0 */
-  Profile.EnableSignal = 0; /* Enable: 1, Disable: 0 */
-
-  pL5obj->IsAmbientEnabled = Profile.EnableAmbient;
-  pL5obj->IsSignalEnabled = Profile.EnableSignal;
-
-  /*
-     use case VL53L7CX_PROFILE_4x4_CONTINUOUS:
-  */
-  status = vl53l7cx_set_resolution(&(pL5obj->Dev), VL53L7CX_RESOLUTION_4X4);
-  status |= vl53l7cx_set_ranging_mode(&(pL5obj->Dev), VL53L7CX_RANGING_MODE_CONTINUOUS);
-  status |= vl53l7cx_set_integration_time_ms(&(pL5obj->Dev), TIMING_BUDGET);
-  status |= vl53l7cx_set_ranging_frequency_hz(&(pL5obj->Dev), RANGING_FREQUENCY);
-
-  if (status != VL53L7CX_STATUS_OK)
-  {
-    printf("ERROR : Configuration programming error!\r\n\r\n");
-    while (1);
-  }
-
-  status = vl53l7cx_start_ranging(&(pL5obj->Dev));
-  if (status != VL53L7CX_STATUS_OK)
-  {
-    printf("vl53l7cx_start_ranging failed\r\n");
-    while (1);
-  }
-
-  while (1)
-  {
-    /* polling mode */
-    (void)vl53l7cx_check_data_ready(&(pL5obj->Dev), &NewDataReady);
-
-    if (NewDataReady != 0)
-    {
-      status = vl53l7cx_get_ranging_data(&(pL5obj->Dev), &data);
-
-      if (status == VL53L7CX_STATUS_OK)
-      {
-        /*
-         Convert the data format to Result format.
-         Note that you can print directly from data format
-        */
-        if (convert_data_format(pL5obj, &data, &Result) < 0)
-        {
-          printf("convert_data_format failed\r\n");
-          while (1);
-        }
-        print_result(&Result);
-      }
-    }
-
-    if (com_has_data())
-    {
-      handle_cmd(get_key());
-    }
-
-    HAL_Delay(POLLING_PERIOD);
-  }
-}
-#else
 void MX_TOF_LoadDefaultConfig(void)
 {
 	  uint32_t Id;
@@ -210,7 +99,7 @@ void MX_TOF_LoadDefaultConfig(void)
 	  }
 }
 
-static void MX_VL53L7CX_SimpleRanging_Process(void)
+void MX_TOF_Process(void)
 {
     static RANGING_SENSOR_Result_t Result;
 
@@ -232,7 +121,6 @@ static void MX_VL53L7CX_SimpleRanging_Process(void)
       handle_cmd(get_key());
     }
 }
-#endif /* USE_BARE_DRIVER */
 
 static void print_result(RANGING_SENSOR_Result_t *Result)
 {
@@ -436,89 +324,6 @@ static uint32_t com_has_data(void)
 {
   return __HAL_UART_GET_FLAG(&hcom_uart[COM1], UART_FLAG_RXNE);;
 }
-
-#ifdef USE_BARE_DRIVER
-static uint8_t map_target_status(uint8_t status)
-{
-  uint8_t ret;
-
-  if ((status == 5U) || (status == 9U))
-  {
-    ret = 0U; /* ranging is OK */
-  }
-  else if (status == 0U)
-  {
-    ret = 255U; /* no update */
-  }
-  else
-  {
-    ret = status; /* return device status otherwise */
-  }
-
-  return ret;
-}
-
-static int32_t convert_data_format(VL53L7CX_Object_t *pObj,
-                                   VL53L7CX_ResultsData *data, RANGING_SENSOR_Result_t *pResult)
-{
-  int32_t ret;
-  uint8_t i, j;
-  uint8_t resolution;
-  uint8_t target_status;
-
-  if ((pObj == NULL) || (pResult == NULL))
-  {
-    ret = VL53L7CX_INVALID_PARAM;
-  }
-  else if (vl53l7cx_get_resolution(&pObj->Dev, &resolution) != VL53L7CX_STATUS_OK)
-  {
-    ret = VL53L7CX_ERROR;
-  }
-  else
-  {
-    pResult->NumberOfZones = resolution;
-
-    for (i = 0; i < resolution; i++)
-    {
-      pResult->ZoneResult[i].NumberOfTargets = data->nb_target_detected[i];
-
-      for (j = 0; j < data->nb_target_detected[i]; j++)
-      {
-        pResult->ZoneResult[i].Distance[j] = (uint32_t)data->distance_mm[(VL53L7CX_NB_TARGET_PER_ZONE * i) + j];
-
-        /* return Ambient value if ambient rate output is enabled */
-        if (pObj->IsAmbientEnabled == 1U)
-        {
-          /* apply ambient value to all targets in a given zone */
-          pResult->ZoneResult[i].Ambient[j] = (float_t)data->ambient_per_spad[i];
-        }
-        else
-        {
-          pResult->ZoneResult[i].Ambient[j] = 0.0f;
-        }
-
-        /* return Signal value if signal rate output is enabled */
-        if (pObj->IsSignalEnabled == 1U)
-        {
-          pResult->ZoneResult[i].Signal[j] =
-            (float_t)data->signal_per_spad[(VL53L7CX_NB_TARGET_PER_ZONE * i) + j];
-        }
-        else
-        {
-          pResult->ZoneResult[i].Signal[j] = 0.0f;
-        }
-
-        target_status = data->target_status[(VL53L7CX_NB_TARGET_PER_ZONE * i) + j];
-        pResult->ZoneResult[i].Status[j] = map_target_status(target_status);
-      }
-    }
-
-    ret = VL53L7CX_OK;
-  }
-
-  return ret;
-}
-#endif
 
 #ifdef __cplusplus
 }
