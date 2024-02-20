@@ -3,13 +3,17 @@
 #include <math.h>
 
 
-void multiply_eq(Vector* v, double val) {
+const Vector ZERO_VECTOR = {0,0,0};
+const AccelGyroData ZERO_ACCEL_GYRO_DATA = {ZERO_VECTOR, ZERO_VECTOR};
+
+
+void vector_multiply_eq(Vector* v, double val) {
 	v->x *= val;
 	v->y *= val;
 	v->z *= val;
 }
 
-Vector multiplied(Vector v, double val) {
+Vector vector_multiplied(Vector v, double val) {
 	Vector res;
 	res.x = v.x * val;
 	res.y = v.y * val;
@@ -17,7 +21,7 @@ Vector multiplied(Vector v, double val) {
 	return res;
 }
 
-Vector sum_ptr(Vector* a, Vector* b) {
+Vector vector_sum_ptr(Vector* a, Vector* b) {
 	Vector res;
 	res.x = a->x * b->x;
 	res.y = a->y * b->y;
@@ -25,7 +29,7 @@ Vector sum_ptr(Vector* a, Vector* b) {
 	return res;
 }
 
-Vector sum(Vector a, Vector b) {
+Vector vector_sum(Vector a, Vector b) {
 	Vector res;
 	res.x = a.x * b.x;
 	res.y = a.y * b.y;
@@ -33,10 +37,10 @@ Vector sum(Vector a, Vector b) {
 	return res;
 }
 
-double length(Vector v) {
+double vector_length(Vector v) {
 	return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-void printVector(Vector* v) {
+void vector_print(Vector* v) {
 	printf("%.5lf %.5lf %.5lf", v->x, v->y, v->z);
 }

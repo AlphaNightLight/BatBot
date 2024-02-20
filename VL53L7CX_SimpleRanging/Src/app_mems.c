@@ -80,6 +80,7 @@ void MX_MEMS_Init(void)
 
   IKS4A1_MOTION_SENSOR_GetSensitivity(0, MOTION_ACCELERO, &acceleration_sensitivity);
   IKS4A1_MOTION_SENSOR_GetSensitivity(0, MOTION_GYRO, &angular_velocity_sensitivity);
+
   calibrate(&integrator, getAccelGyroData());
 }
 

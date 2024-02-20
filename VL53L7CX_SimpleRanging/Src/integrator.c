@@ -8,38 +8,38 @@ void calibrate(Integrator* this, AccelGyroData data) {
 	this->calibratedAccel = data.accel;
 	this->lastAccel = data.accel;
 
-	multiply_eq(&this->velocity, 0);
-	multiply_eq(&this->position, 0);
-	multiply_eq(&this->rotation, 0);
+	vector_multiply_eq(&this->velocity, 0);
+	vector_multiply_eq(&this->position, 0);
+	vector_multiply_eq(&this->rotation, 0);
 
-	printf("Calibrating integrator with accel = "); printVector(&data.accel);
-	printf("; gyro = "); printVector(&data.gyro); printf("\r\n");
+	printf("Calibrating integrator with accel = "); vector_print(&data.accel);
+	printf("; gyro = "); vector_print(&data.gyro); printf("\r\n");
 }
 
 int tt=0;
 void update(Integrator* this, AccelGyroData data, double deltat) {
-	this->rotation = sum(this->rotation, multiplied(sum(data.gyro, multiplied(this->calibratedGyro, -1)), deltat));
+	this->rotation = vector_sum(this->rotation, vector_multiplied(vector_sum(data.gyro, vector_multiplied(this->calibratedGyro, -1)), deltat));
 
   Vector accel = data.accel;//rotate(data.accel, rotation);
 
   if (tt==0){
-	  printVector(&this->rotation); printf("  ");
-	  printVector(&data.accel); printf("  ");
-	  printVector(&accel); printf("  ");
-	  printVector(&this->calibratedAccel); printf("  ");
+	  vector_print(&this->rotation); printf("  ");
+	  vector_print(&data.accel); printf("  ");
+	  vector_print(&accel); printf("  ");
+	  vector_print(&this->calibratedAccel); printf("  ");
   }
 
-  double lastAccelDiff = length(sum(accel, multiplied(this->lastAccel, -1)));
+  double lastAccelDiff = vector_length(vector_sum(accel, vector_multiplied(this->lastAccel, -1)));
   this->lastAccel = accel;
   
-  accel = sum(accel, multiplied(this->calibratedAccel, -1));
-  this->velocity = sum(this->velocity, multiplied(accel, deltat));
-  this->position = sum(this->position, multiplied(this->velocity, deltat));
+  accel = vector_sum(accel, vector_multiplied(this->calibratedAccel, -1));
+  this->velocity = vector_sum(this->velocity, vector_multiplied(accel, deltat));
+  this->position = vector_sum(this->position, vector_multiplied(this->velocity, deltat));
 
   if (tt==0){
-	  printVector(&accel); printf("  ");
-	  printVector(&this->velocity); printf("  ");
-	  printVector(&this->position); printf("\r\n");
+	  vector_print(&accel); printf("  ");
+	  vector_print(&this->velocity); printf("  ");
+	  vector_print(&this->position); printf("\r\n");
     tt=100;
   }
   --tt;
