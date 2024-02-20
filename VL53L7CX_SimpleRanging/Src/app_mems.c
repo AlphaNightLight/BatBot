@@ -32,6 +32,7 @@ extern "C" {
 
 /* Private variables ---------------------------------------------------------*/
 static IKS4A1_MOTION_SENSOR_Capabilities_t MotionCapabilities[IKS4A1_MOTION_INSTANCES_NBR];
+static Integrator integrator;
 const double mgToMps2 = 9.80665 / 1000;
 const double mdpsToRadps = 0.000017453292519943295769236907684886;
 const int CALIBRATION_SKIP_COUNT = 5;
@@ -51,17 +52,18 @@ AccelGyroData getAccelGyroData() {
   data.accel.y = acceleration.y * (double) acceleration_sensitivity * mgToMps2;
   data.accel.z = acceleration.z * (double) acceleration_sensitivity * mgToMps2;
   data.gyro.x = angular_velocity.x * (double) angular_velocity_sensitivity * mdpsToRadps;
-  data.gyro.x = angular_velocity.y * (double) angular_velocity_sensitivity * mdpsToRadps;
-  data.gyro.x = angular_velocity.z * (double) angular_velocity_sensitivity * mdpsToRadps;
+  data.gyro.y = angular_velocity.y * (double) angular_velocity_sensitivity * mdpsToRadps;
+  data.gyro.z = angular_velocity.z * (double) angular_velocity_sensitivity * mdpsToRadps;
 
-  // printf("Read accel_gyro_data = "); accel_gyro_data_print(&data); printf("\r\n");
+//  printf("Read ax=%d ay=%d az=%d gx=%d gy=%d gz=%d accel_gyro_data = ",
+//		  acceleration.x, acceleration.y, acceleration.z,
+//		  angular_velocity.x, angular_velocity.y, angular_velocity.z);
+//  accel_gyro_data_print(&data); printf("\r\n");
   return data;
 }
 
 void MX_MEMS_Init(void)
 {
-	static Integrator integrator;
-
   printf("\r\n__________________________________________________________________________\r\n");
   printf("A %ld\r\n", IKS4A1_MOTION_SENSOR_Init(IKS4A1_LSM6DSV16X_0, MOTION_ACCELERO | MOTION_GYRO));
   // printf("B %ld\r\n", IKS4A1_MOTION_SENSOR_Init(IKS4A1_LSM6DSO16IS_0, MOTION_ACCELERO | MOTION_GYRO));
@@ -93,11 +95,18 @@ void MX_MEMS_Init(void)
   }
   accel_gyro_data_multiply_eq(&average, 1.0 / CALIBRATION_AVERAGE_COUNT);
 
-  calibrate(&integrator, average);
+  integrator_calibrate(&integrator, average);
 }
 
 void MX_MEMS_Process(void)
 {
+	static uint32_t lastTime = 0;
+	uint32_t curTime = DWT->CYCCNT;
+	uint32_t deltaTime = curTime - lastTime;
+	lastTime = curTime;
+	double deltaTimeSeconds = (double) deltaTime / HAL_RCC_GetHCLKFreq();
+
+	integrator_update(&integrator, getAccelGyroData(), deltaTimeSeconds);
 }
 
 #ifdef __cplusplus

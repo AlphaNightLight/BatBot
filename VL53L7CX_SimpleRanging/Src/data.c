@@ -54,7 +54,7 @@ double vector_length(Vector v) {
 }
 
 void vector_print(Vector* v) {
-	printf("%.5lf %.5lf %.5lf", v->x, v->y, v->z);
+	printf("%+.4lf %+.4lf %+.4lf", v->x, v->y, v->z);
 }
 
 void accel_gyro_data_print(AccelGyroData* v) {

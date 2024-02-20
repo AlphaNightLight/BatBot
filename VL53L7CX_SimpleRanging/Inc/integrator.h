@@ -16,5 +16,5 @@ typedef struct {
 
 } Integrator;
 
-void calibrate(Integrator* integrator, AccelGyroData data);
-void update(Integrator* integrator, AccelGyroData data, double deltat);
+void integrator_calibrate(Integrator* integrator, AccelGyroData data);
+void integrator_update(Integrator* integrator, AccelGyroData data, double deltat);
