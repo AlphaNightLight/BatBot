@@ -415,6 +415,32 @@ static void Gyro_Sensor_Handler(uint32_t Instance)
   }
 }
 
+uint32_t SquareRoot(uint32_t a_nInput)
+{
+    uint32_t op  = a_nInput;
+    uint32_t res = 0;
+    uint32_t one = 1uL << 30; // The second-to-top bit is set: use 1u << 14 for uint16_t type; use 1uL<<30 for uint32_t type
+
+
+    // "one" starts at the highest power of four <= than the argument.
+    while (one > op)
+    {
+        one >>= 2;
+    }
+
+    while (one != 0)
+    {
+        if (op >= res + one)
+        {
+            op = op - (res + one);
+            res = res +  2 * one;
+        }
+        res >>= 1;
+        one >>= 2;
+    }
+    return res;
+}
+
 /**
   * @brief  Handles the magneto axes data getting/sending
   * @param  Instance the device instance
@@ -433,15 +459,20 @@ static void Magneto_Sensor_Handler(uint32_t Instance)
 
   if (IKS4A1_MOTION_SENSOR_GetAxes(Instance, MOTION_MAGNETO, &magnetic_field))
   {
-    snprintf(dataOut, MAX_BUF_SIZE, "\r\nMAG[%d]: Error\r\n", (int)Instance);
+    snprintf(dataOut, MAX_BUF_SIZE, "MAG[%d]: Error", (int)Instance);
   }
   else
   {
-    snprintf(dataOut, MAX_BUF_SIZE, "\r\nMAG_X[%d]: %d, MAG_Y[%d]: %d, MAG_Z[%d]: %d\r\n", (int)Instance,
-             (int)magnetic_field.x, (int)Instance, (int)magnetic_field.y, (int)Instance, (int)magnetic_field.z);
+    snprintf(dataOut, MAX_BUF_SIZE, "MAG_X[%d]: %d, MAG_Y[%d]: %d, MAG_Z[%d]: %d, AVG: %ld", (int)Instance,
+             (int)magnetic_field.x, (int)Instance, (int)magnetic_field.y, (int)Instance, (int)magnetic_field.z,
+			 SquareRoot(magnetic_field.x*magnetic_field.x + magnetic_field.y*magnetic_field.y + magnetic_field.z*magnetic_field.z));
   }
 
-  printf("%s", dataOut);
+  if (verbose == 1) {
+	  printf("\r\n%s\r\n", dataOut);
+  } else {
+	  printf("%s", dataOut);
+  }
 
   if (verbose == 1)
   {
