@@ -20,21 +20,9 @@ int main(void)
   MX_TOF_LoadDefaultConfig();
 
   // Infinite loop
-  uint32_t t0 = HAL_GetTick();
-  uint32_t times = 0;
-  uint32_t maxtoft = 0;
   while (1)
   {
-	uint32_t toft0 = HAL_GetTick();
     MX_TOF_Process();
-	uint32_t toft1 = HAL_GetTick();
-	if (toft1 - toft0 > maxtoft) maxtoft = toft1 - toft0;
     MX_MEMS_Process();
-    ++times;
-
-    if (times % 1000 == 0) {
-        printf("avg=%lu max=%lu last=%lu cnt=%lu\r\n", (HAL_GetTick() - t0) * 1000 / times, maxtoft, toft1-toft0, DWT->CYCCNT);
-        fflush(stdout);
-    }
   }
 }

@@ -11,6 +11,9 @@ void calibrate(Integrator* this, AccelGyroData data) {
 	multiply_eq(&this->velocity, 0);
 	multiply_eq(&this->position, 0);
 	multiply_eq(&this->rotation, 0);
+
+	printf("Calibrating integrator with accel = "); printVector(&data.accel);
+	printf("; gyro = "); printVector(&data.gyro); printf("\r\n");
 }
 
 int tt=0;
