@@ -6,9 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = { version = "0.11", features = ["default_font"]}
-bevy-aabb-instancing = "0.10"
-bevy_embedded_assets ="0.8"
+bevy = { version = "0.12.1", features = ["default_font"]}
+bevy-aabb-instancing = "0.11"
+bevy_embedded_assets ="0.9.1"
 rand = "0.8"
 protocol= {path="../../common/protocol", features = ["ble"]}
 #tokio = "1.35"
