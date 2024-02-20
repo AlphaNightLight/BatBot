@@ -28,14 +28,14 @@
 extern "C" {
 #endif
 
-#define USE_IKS4A1_ENV_SENSOR_SHT40AD1B_0                      1U
-#define USE_IKS4A1_ENV_SENSOR_LPS22DF_0                        1U
-#define USE_IKS4A1_ENV_SENSOR_STTS22H_0                        1U
+#define USE_IKS4A1_ENV_SENSOR_SHT40AD1B_0                      0U
+#define USE_IKS4A1_ENV_SENSOR_LPS22DF_0                        0U
+#define USE_IKS4A1_ENV_SENSOR_STTS22H_0                        0U
 
 #define USE_IKS4A1_MOTION_SENSOR_LSM6DSV16X_0                  1U
-#define USE_IKS4A1_MOTION_SENSOR_LIS2DUXS12_0                  1U
+#define USE_IKS4A1_MOTION_SENSOR_LIS2DUXS12_0                  0U
 #define USE_IKS4A1_MOTION_SENSOR_LIS2MDL_0                     0U
-#define USE_IKS4A1_MOTION_SENSOR_LSM6DSO16IS_0                 1U
+#define USE_IKS4A1_MOTION_SENSOR_LSM6DSO16IS_0                 0U
 
 #define IKS4A1_I2C_Init BSP_I2C1_Init
 #define IKS4A1_I2C_DeInit BSP_I2C1_DeInit

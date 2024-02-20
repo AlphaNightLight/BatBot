@@ -120,7 +120,6 @@ int main(void)
     MX_MEMS_Process();
     ++times;
 
-    HAL_Delay(100);
     if (times % 1000 == 0) {
         printf("avg=%lu max=%lu last=%lu cnt=%lu\r\n", (HAL_GetTick() - t0) * 1000 / times, maxtoft, toft1-toft0, DWT->CYCCNT);
         fflush(stdout);

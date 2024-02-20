@@ -57,9 +57,24 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Src/custom_ranging_sensor.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/data.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Src/data.cpp</locationURI>
+		</link>
+		<link>
+			<name>Application/User/integrator.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Src/integrator.cpp</locationURI>
+		</link>
+		<link>
 			<name>Application/User/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Src/main.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/rotation.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Src/rotation.cpp</locationURI>
 		</link>
 		<link>
 			<name>Application/User/stm32f4xx_hal_msp.c</name>
@@ -285,16 +300,6 @@
 			<name>Drivers/BSP/Components/vl53l7cx_plugin_xtalk.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components/vl53l7cx/modules/vl53l7cx_plugin_xtalk.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/IKS4A1/iks4a1_env_sensors.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/IKS4A1/iks4a1_env_sensors.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/IKS4A1/iks4a1_env_sensors_ex.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/IKS4A1/iks4a1_env_sensors_ex.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/IKS4A1/iks4a1_motion_sensors.c</name>

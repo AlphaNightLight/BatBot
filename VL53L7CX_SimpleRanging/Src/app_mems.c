@@ -26,7 +26,6 @@ extern "C" {
 #include <stdio.h>
 
 #include "iks4a1_motion_sensors.h"
-#include "iks4a1_env_sensors.h"
 #include "stm32f4xx_nucleo.h"
 #include "math.h"
 
@@ -44,7 +43,6 @@ typedef struct displayFloatToInt_s {
 static volatile uint8_t PushButtonDetected = 0;
 static uint8_t verbose = 0;  /* Verbose output to UART terminal ON/OFF. */
 static IKS4A1_MOTION_SENSOR_Capabilities_t MotionCapabilities[IKS4A1_MOTION_INSTANCES_NBR];
-static IKS4A1_ENV_SENSOR_Capabilities_t EnvCapabilities[IKS4A1_ENV_INSTANCES_NBR];
 static char dataOut[MAX_BUF_SIZE];
 static int32_t PushButtonState = GPIO_PIN_RESET;
 
@@ -53,9 +51,6 @@ static void floatToInt(float in, displayFloatToInt_t *out_value, int32_t dec_pre
 static void Accelero_Sensor_Handler(uint32_t Instance);
 static void Gyro_Sensor_Handler(uint32_t Instance);
 static void Magneto_Sensor_Handler(uint32_t Instance);
-static void Temp_Sensor_Handler(uint32_t Instance);
-static void Hum_Sensor_Handler(uint32_t Instance);
-static void Press_Sensor_Handler(uint32_t Instance);
 static void MX_IKS4A1_DataLogTerminal_Init(void);
 static void MX_IKS4A1_DataLogTerminal_Process(void);
 
@@ -120,9 +115,9 @@ void MX_IKS4A1_DataLogTerminal_Init(void)
 
   printf("A %ld\r\n", IKS4A1_MOTION_SENSOR_Init(IKS4A1_LSM6DSV16X_0, MOTION_ACCELERO | MOTION_GYRO));
 
-  printf("B %ld\r\n", IKS4A1_MOTION_SENSOR_Init(IKS4A1_LSM6DSO16IS_0, MOTION_ACCELERO | MOTION_GYRO));
+  // printf("B %ld\r\n", IKS4A1_MOTION_SENSOR_Init(IKS4A1_LSM6DSO16IS_0, MOTION_ACCELERO | MOTION_GYRO));
 
-  printf("C %ld\r\n", IKS4A1_MOTION_SENSOR_Init(IKS4A1_LIS2DUXS12_0, MOTION_ACCELERO));
+  // printf("C %ld\r\n", IKS4A1_MOTION_SENSOR_Init(IKS4A1_LIS2DUXS12_0, MOTION_ACCELERO));
 
   //printf("D %ld\r\n", IKS4A1_MOTION_SENSOR_Init(IKS4A1_LIS2MDL_0, MOTION_MAGNETO));
 
@@ -502,173 +497,6 @@ static void Magneto_Sensor_Handler(uint32_t Instance)
   }
 }
 
-/**
-  * @brief  Handles the temperature data getting/sending
-  * @param  Instance the device instance
-  * @retval None
-  */
-static void Temp_Sensor_Handler(uint32_t Instance)
-{
-  float odr;
-  float temperature;
-  displayFloatToInt_t out_value;
-  uint8_t whoami;
-
-  snprintf(dataOut, MAX_BUF_SIZE, "\r\nEnvironmental sensor instance %d:", (int)Instance);
-  printf("%s", dataOut);
-
-  if (IKS4A1_ENV_SENSOR_GetValue(Instance, ENV_TEMPERATURE, &temperature))
-  {
-    snprintf(dataOut, MAX_BUF_SIZE, "\r\nTemp[%d]: Error\r\n", (int)Instance);
-  }
-  else
-  {
-    floatToInt(temperature, &out_value, 2);
-    snprintf(dataOut, MAX_BUF_SIZE, "\r\nTemp[%d]: %c%d.%02d degC\r\n", (int)Instance, ((out_value.sign) ? '-' : '+'), (int)out_value.out_int,
-             (int)out_value.out_dec);
-  }
-
-  printf("%s", dataOut);
-
-  if (verbose == 1)
-  {
-    if (IKS4A1_ENV_SENSOR_ReadID(Instance, &whoami))
-    {
-      snprintf(dataOut, MAX_BUF_SIZE, "WHOAMI[%d]: Error\r\n", (int)Instance);
-    }
-    else
-    {
-      snprintf(dataOut, MAX_BUF_SIZE, "WHOAMI[%d]: 0x%x\r\n", (int)Instance, (int)whoami);
-    }
-
-    printf("%s", dataOut);
-
-    if (IKS4A1_ENV_SENSOR_GetOutputDataRate(Instance, ENV_TEMPERATURE, &odr))
-    {
-      snprintf(dataOut, MAX_BUF_SIZE, "ODR[%d]: Error\r\n", (int)Instance);
-    }
-    else
-    {
-      floatToInt(odr, &out_value, 3);
-      snprintf(dataOut, MAX_BUF_SIZE, "ODR[%d]: %d.%03d Hz\r\n", (int)Instance, (int)out_value.out_int,
-               (int)out_value.out_dec);
-    }
-
-    printf("%s", dataOut);
-  }
-}
-
-/**
-  * @brief  Handles the pressure sensor data getting/sending
-  * @param  Instance the device instance
-  * @retval None
-  */
-static void Press_Sensor_Handler(uint32_t Instance)
-{
-  float odr;
-  float pressure;
-  displayFloatToInt_t out_value;
-  uint8_t whoami;
-
-  snprintf(dataOut, MAX_BUF_SIZE, "\r\nEnvironmental sensor instance %d:", (int)Instance);
-  printf("%s", dataOut);
-
-  if (IKS4A1_ENV_SENSOR_GetValue(Instance, ENV_PRESSURE, &pressure))
-  {
-    snprintf(dataOut, MAX_BUF_SIZE, "\r\nPress[%d]: Error\r\n", (int)Instance);
-  }
-  else
-  {
-    floatToInt(pressure, &out_value, 2);
-    snprintf(dataOut, MAX_BUF_SIZE, "\r\nPress[%d]: %d.%02d hPa\r\n", (int)Instance, (int)out_value.out_int,
-             (int)out_value.out_dec);
-  }
-
-  printf("%s", dataOut);
-
-  if (verbose == 1)
-  {
-    if (IKS4A1_ENV_SENSOR_ReadID(Instance, &whoami))
-    {
-      snprintf(dataOut, MAX_BUF_SIZE, "WHOAMI[%d]: Error\r\n", (int)Instance);
-    }
-    else
-    {
-      snprintf(dataOut, MAX_BUF_SIZE, "WHOAMI[%d]: 0x%x\r\n", (int)Instance, (int)whoami);
-    }
-
-    printf("%s", dataOut);
-
-    if (IKS4A1_ENV_SENSOR_GetOutputDataRate(Instance, ENV_PRESSURE, &odr))
-    {
-      snprintf(dataOut, MAX_BUF_SIZE, "ODR[%d]: Error\r\n", (int)Instance);
-    }
-    else
-    {
-      floatToInt(odr, &out_value, 3);
-      snprintf(dataOut, MAX_BUF_SIZE, "ODR[%d]: %d.%03d Hz\r\n", (int)Instance, (int)out_value.out_int,
-               (int)out_value.out_dec);
-    }
-
-    printf("%s", dataOut);
-  }
-}
-
-/**
-  * @brief  Handles the humidity data getting/sending
-  * @param  Instance the device instance
-  * @retval None
-  */
-static void Hum_Sensor_Handler(uint32_t Instance)
-{
-  float odr;
-  float humidity;
-  displayFloatToInt_t out_value;
-  uint8_t whoami;
-
-  snprintf(dataOut, MAX_BUF_SIZE, "\r\nEnvironmental sensor instance %d:", (int)Instance);
-  printf("%s", dataOut);
-
-  if (IKS4A1_ENV_SENSOR_GetValue(Instance, ENV_HUMIDITY, &humidity))
-  {
-    snprintf(dataOut, MAX_BUF_SIZE, "\r\nHum[%d]: Error\r\n", (int)Instance);
-  }
-  else
-  {
-    floatToInt(humidity, &out_value, 2);
-    snprintf(dataOut, MAX_BUF_SIZE, "\r\nHum[%d]: %d.%02d %%\r\n", (int)Instance, (int)out_value.out_int,
-             (int)out_value.out_dec);
-  }
-
-  printf("%s", dataOut);
-
-  if (verbose == 1)
-  {
-    if (IKS4A1_ENV_SENSOR_ReadID(Instance, &whoami))
-    {
-      snprintf(dataOut, MAX_BUF_SIZE, "WHOAMI[%d]: Error\r\n", (int)Instance);
-    }
-    else
-    {
-      snprintf(dataOut, MAX_BUF_SIZE, "WHOAMI[%d]: 0x%x\r\n", (int)Instance, (int)whoami);
-    }
-
-    printf("%s", dataOut);
-
-    if (IKS4A1_ENV_SENSOR_GetOutputDataRate(Instance, ENV_HUMIDITY, &odr))
-    {
-      snprintf(dataOut, MAX_BUF_SIZE, "ODR[%d]: Error\r\n", (int)Instance);
-    }
-    else
-    {
-      floatToInt(odr, &out_value, 3);
-      snprintf(dataOut, MAX_BUF_SIZE, "ODR[%d]: %d.%03d Hz\r\n", (int)Instance, (int)out_value.out_int,
-               (int)out_value.out_dec);
-    }
-
-    printf("%s", dataOut);
-  }
-}
 
 #ifdef __cplusplus
 }
