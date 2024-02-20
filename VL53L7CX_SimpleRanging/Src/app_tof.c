@@ -109,6 +109,7 @@ void MX_TOF_Process(void)
     if (status == BSP_ERROR_NONE)
     {
     	printf("X");
+    	fflush(stdout);
       //print_result(&Result);
     }
     else if (status != VL53L7CX_TIMEOUT)

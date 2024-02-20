@@ -34,6 +34,8 @@ extern "C" {
 static IKS4A1_MOTION_SENSOR_Capabilities_t MotionCapabilities[IKS4A1_MOTION_INSTANCES_NBR];
 const double mgToMps2 = 9.80665 / 1000;
 const double mdpsToRadps = 0.000017453292519943295769236907684886;
+const int CALIBRATION_SKIP_COUNT = 5;
+const int CALIBRATION_AVERAGE_COUNT = 10;
 float acceleration_sensitivity;
 float angular_velocity_sensitivity;
 
@@ -52,6 +54,7 @@ AccelGyroData getAccelGyroData() {
   data.gyro.x = angular_velocity.y * (double) angular_velocity_sensitivity * mdpsToRadps;
   data.gyro.x = angular_velocity.z * (double) angular_velocity_sensitivity * mdpsToRadps;
 
+  // printf("Read accel_gyro_data = "); accel_gyro_data_print(&data); printf("\r\n");
   return data;
 }
 
@@ -81,7 +84,16 @@ void MX_MEMS_Init(void)
   IKS4A1_MOTION_SENSOR_GetSensitivity(0, MOTION_ACCELERO, &acceleration_sensitivity);
   IKS4A1_MOTION_SENSOR_GetSensitivity(0, MOTION_GYRO, &angular_velocity_sensitivity);
 
-  calibrate(&integrator, getAccelGyroData());
+  AccelGyroData average = ACCEL_GYRO_DATA_ZERO;
+  for (int i = 0; i < CALIBRATION_SKIP_COUNT; ++i) {
+	  getAccelGyroData(); // discard data
+  }
+  for (int i = 0; i < CALIBRATION_AVERAGE_COUNT; ++i) {
+	  average = accel_gyro_data_sum(average, getAccelGyroData());
+  }
+  accel_gyro_data_multiply_eq(&average, 1.0 / CALIBRATION_AVERAGE_COUNT);
+
+  calibrate(&integrator, average);
 }
 
 void MX_MEMS_Process(void)
