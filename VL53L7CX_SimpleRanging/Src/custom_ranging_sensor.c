@@ -248,13 +248,9 @@ int32_t CUSTOM_RANGING_SENSOR_GetDistance(uint32_t Instance, RANGING_SENSOR_Resu
   {
     ret = BSP_ERROR_WRONG_PARAM;
   }
-  else if (CUSTOM_RANGING_Drv[Instance]->GetDistance(CUSTOM_RANGING_CompObj[Instance], pResult) < 0)
-  {
-    ret = BSP_ERROR_COMPONENT_FAILURE;
-  }
   else
   {
-    ret = BSP_ERROR_NONE;
+    ret = CUSTOM_RANGING_Drv[Instance]->GetDistance(CUSTOM_RANGING_CompObj[Instance], pResult);
   }
 
   return ret;
@@ -437,7 +433,7 @@ static int32_t VL53L7CX_Probe(uint32_t Instance)
   IOCtx.GetTick     = BSP_GetTick;
 
   int32_t res = VL53L7CX_RegisterBusIO(&VL53L7CXObj, &IOCtx);
-  printf("VL53L7CX_RegisterBusIO returned %ld\n", res);
+  printf("VL53L7CX_RegisterBusIO returned %ld\r\n", res);
   if (res != VL53L7CX_OK)
   {
     ret = BSP_ERROR_COMPONENT_FAILURE;
@@ -449,7 +445,7 @@ static int32_t VL53L7CX_Probe(uint32_t Instance)
 
     if (VL53L7CX_ReadID(&VL53L7CXObj, &id) != VL53L7CX_OK)
     {
-    	printf("HERE1\n");
+    	printf("HERE1\r\n");
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
     else if (id != VL53L7CX_ID)
@@ -458,13 +454,13 @@ static int32_t VL53L7CX_Probe(uint32_t Instance)
     }
     else if (CUSTOM_RANGING_Drv[Instance]->Init(CUSTOM_RANGING_CompObj[Instance]) != VL53L7CX_OK)
     {
-    	printf("HERE2\n");
+    	printf("HERE2\r\n");
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
     else if (CUSTOM_RANGING_Drv[Instance]->GetCapabilities(CUSTOM_RANGING_CompObj[Instance],
                                                            &RANGING_SENSOR_Cap[Instance]) != VL53L7CX_OK)
     {
-    	printf("HERE3\n");
+    	printf("HERE3\r\n");
       ret = BSP_ERROR_COMPONENT_FAILURE;
     }
     else

@@ -194,24 +194,13 @@ void BSP_PB_Callback(Button_TypeDef Button)
   */
 void MX_IKS4A1_DataLogTerminal_Process(void)
 {
-  int i;
+	IKS4A1_MOTION_SENSOR_Axes_t acceleration;
+	IKS4A1_MOTION_SENSOR_Axes_t angular_velocity;
+	IKS4A1_MOTION_SENSOR_GetAxes(0, MOTION_ACCELERO, &acceleration);
+	IKS4A1_MOTION_SENSOR_GetAxes(0, MOTION_GYRO, &angular_velocity);
 
-  if (PushButtonDetected != 0U)
-  {
-    /* Debouncing */
-    HAL_Delay(50);
 
-    /* Wait until the button is released */
-    while ((BSP_PB_GetState( BUTTON_KEY ) == PushButtonState));
-
-    /* Debouncing */
-    HAL_Delay(50);
-
-    /* Reset Interrupt flag */
-    PushButtonDetected = 0;
-
-    MX_IKS4A1_DataLogTerminal_Init();
-  }
+  /*int i;
 
   snprintf(dataOut, MAX_BUF_SIZE, "\r\n__________________________________________________________________________\r\n");
   printf("%s", dataOut);
