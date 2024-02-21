@@ -32,7 +32,7 @@ unsigned char read (void * x){
 }
 
 void send(void *x, unsigned char c){
-	HAL_UART_Transmit_IT(&huart2, &c, 1);
+	HAL_UART_Transmit(&huart2, &c, 1, 100);
 }
 int available(void *x){
 	return (end-start+INC_BUFFER_SIZE)%INC_BUFFER_SIZE;
@@ -53,7 +53,7 @@ int random(int x){
 	return 0;
 }
 int millis(){
-	return DWT->CYCCNT*1000/HAL_RCC_GetHCLKFreq();
+	return (uint32_t)((uint64_t)DWT->CYCCNT*1000/HAL_RCC_GetHCLKFreq());
 }
 
 void test_protocol (){ //TODO LEVAMI
@@ -67,7 +67,7 @@ void test_protocol (){ //TODO LEVAMI
 	unsigned long last_position_send=millis();
 
 	float x=0.0, y=0.0, z=0.0, angle=0.0;
-	float speed, rotation;
+	float speed=0.0, rotation=1.0;
 	unsigned long last_update;
 
 	while(1){
@@ -101,7 +101,7 @@ void test_protocol (){ //TODO LEVAMI
 
 
 		  unsigned long now=millis();
-		  float elapsed = ((float)(now-last_update))/1000;
+		  float elapsed = 0.001;//((float)(now-last_update))/1000;
 		  last_update=now;
 		  x+=elapsed*sin(angle)*speed*8.;
 		  y+=elapsed*cos(angle)*speed*8.;

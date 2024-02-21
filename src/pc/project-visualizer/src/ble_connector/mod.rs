@@ -68,9 +68,11 @@ pub fn setup(world: &mut World) {
 pub fn receive(mut res: NonSendMut<BleResource>, mut q: Query<&mut Cuboids>, mut car: Query<(&mut Transform, &mut Car)>, mut ble_stats: ResMut<BleStatistics>) {
     for _ in 0..10 {
         if let Some(data) = res.protocol.read() {
+           
             //println!("{:?}", String::from_utf8(data.clone()));
             res.unavailable_wave = 0;
             if let Ok(pos) = Position::try_from(&data[..]) {
+                println!("{:?}", pos);
                 ble_stats.n_blocks+=1;
                 ble_stats.dur_blocks+=res.blocks_instant.elapsed();
                 res.blocks_instant=Instant::now();

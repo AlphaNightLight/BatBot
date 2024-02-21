@@ -21,15 +21,6 @@ void flush(void* t){
   Serial.flush();
 }
 
-unsigned char buffer[40];
-unsigned long last_cube;
-unsigned long last_position_send;
-bool state=false;
-
-float x, y, z, angle;
-float speed, rotation;
-unsigned long last_update;
-
 void setup() {
   Serial.begin(115200);
   hal.init(NULL, available, send, read, flush);
