@@ -41,6 +41,8 @@ fn input_update(
     if keys.pressed(KeyCode::D) {
         inputs.rot_speed -= 1.;
     }
+    
+
 }
 
 

@@ -416,6 +416,18 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
+
+void send_to_display(Protocol &protocol, RANGING_SENSOR_Result_t to_send){
+	uint8_t tmp[33];
+	for (uint8_t i=0; i<8; i++){
+		tmp[0]=i;
+		for(unint8_t x=0; x<8; x++){
+			memcpy(tmp+1+x*4, to_send.ZoneResult+i*8+x, sizeof(float));
+		}
+		protocol.send_msg(tmp, 33);
+	}
+
+}
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None

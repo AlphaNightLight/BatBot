@@ -1,8 +1,8 @@
 mod data;
 use std::error::Error;
+use std::f32::consts::PI;
 use std::time::{Duration, Instant};
 
-use bevy::ecs::system::InsertResource;
 use bevy::prelude::*;
 use bevy_aabb_instancing::Cuboids;
 use protocol::serial::tokio::runtime::Handle;
@@ -14,7 +14,7 @@ use crate::car::Car;
 use crate::input::Inputs;
 use crate::spawn_wall;
 
-use self::data::{BlockRow, CarPosition, Position};
+use self::data::{BlockRow, CarPosition};
 
 //#[derive(Resource)]
 
@@ -68,8 +68,11 @@ pub fn setup(world: &mut World) {
 pub fn receive(mut res: NonSendMut<BleResource>, mut q: Query<&mut Cuboids>, mut car: Query<(&mut Transform, &mut Car)>, mut ble_stats: ResMut<BleStatistics>) {
     for _ in 0..10 {
         if let Some(data) = res.protocol.read() {
-           
-            println!("{:?}", String::from_utf8(data.clone()));
+            if let Ok(s) = String::from_utf8(data.clone()){
+                if s.chars().all(|x| x.is_ascii_alphanumeric()){
+                    println!("{}", s);
+                }
+            }
             res.unavailable_wave = 0;
             if let Ok(row) = BlockRow::try_from(&data[..]) {
                 println!("{:?}", row);
@@ -128,7 +131,9 @@ pub fn send(mut res: NonSendMut<BleResource>, inputs: Res<Inputs>){
     if res.last_joystick.elapsed().as_millis()>20{
         res.last_joystick=Instant::now();
         //println!("sending");
-        let j = Joystick{x: inputs.speed, y: inputs.rot_speed};
+        let speed = (inputs.speed.powi(2)+inputs.rot_speed.powi(2)).sqrt();
+        let rot = f32::atan2(inputs.speed, inputs.rot_speed)*180./PI;
+        let j = Joystick{x: speed, y: rot};
         res.protocol.send_struct(j);
     }
 }
