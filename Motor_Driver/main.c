@@ -2,6 +2,7 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <ti/grlib/grlib.h>
 #include <stdio.h>
+#include "driver.h"
 
 #define MY_TIMER_PERIOD 255
 #define TURNING_DURATION 2000 // Turning duration in milliseconds
@@ -157,13 +158,11 @@ typedef enum
 } CarState;
 
 CarState currentState = INIT;
-uint32_t lastStateChangeTime = 0;
 
 void transitionToState(CarState newState)
 {
     // Implement any state transition actions here, if needed
     currentState = newState;
-    lastStateChangeTime = MAP_Timer_A_getCounterValue(TIMER_A0_BASE); // Update the time of the last state change
 }
 
 void updateCarState(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle)
@@ -171,10 +170,6 @@ void updateCarState(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle)
     switch (currentState)
     {
     case INIT:
-        printf("Let's go!\n");
-
-        __delay_cycles(10000000);
-
         transitionToState(STANDBY);
 
         break;
@@ -183,13 +178,10 @@ void updateCarState(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle)
         if ((desired_angle == actual_angle) && speed != 0)
         {
             transitionToState(FORWARD);
+
             break;
         }
         standBy();
-
-        printf("-------------- STAND BY --------------\n");
-
-        __delay_cycles(10000000);
 
         transitionToState(TURNING);
 
@@ -199,14 +191,32 @@ void updateCarState(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle)
         if (desired_angle == actual_angle)
         {
             transitionToState(FORWARD);
+
             break;
         }
-        turnRight();
 
-        printf("-------------- TURNING --------------\n");
-
-        // Check if it's time to transition to the next state
-        __delay_cycles(20000000);
+        if (desired_angle > actual_angle)
+        {
+            if (desired_angle - actual_angle <= 180)
+            {
+                turnRight();
+            }
+            else
+            {
+                turnLeft();
+            }
+        }
+        else
+        {
+            if (actual_angle - desired_angle <= 180)
+            {
+                turnRight();
+            }
+            else
+            {
+                turnLeft();
+            }
+        }
 
         standBy();
 
@@ -215,16 +225,19 @@ void updateCarState(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle)
         break;
 
     case FORWARD:
-        if ((desired_angle != actual_angle) || speed == 0)
+        if (speed == 0)
         {
             transitionToState(STANDBY);
+
+            break;
+        }
+        if (desired_angle != actual_angle)
+        {
+            transitionToState(TURNING);
+
             break;
         }
         moveForward(speed);
-
-        printf("-------------- FORWARD --------------\n");
-
-        __delay_cycles(20000000);
 
         transitionToState(STANDBY);
 
@@ -232,17 +245,16 @@ void updateCarState(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle)
 
     default:
         printf("Error in the FSM switch\n");
+
         break;
     }
 }
 
-void main(void)
+uint8_t runCar(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle)
 {
     setUp();
 
-    while (1)
-    {
-        printf("Current state: %d\n", currentState);
-        updateCarState(0, 2, 1);
-    }
+    updateCarState();
+
+    return currentState;
 }
