@@ -35,7 +35,7 @@ extern Integrator integrator;
 
 /* Exported functions --------------------------------------------------------*/
 void MX_MEMS_Init(void);
-void MX_MEMS_Process(void);
+void MX_MEMS_Process(CarState car_state);
 
 #ifdef __cplusplus
 }

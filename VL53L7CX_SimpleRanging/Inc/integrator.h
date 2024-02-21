@@ -1,14 +1,12 @@
 #pragma once
 
 #include "data.h"
+#include "motors.h"
 
 typedef struct {
 
   Vector calibratedAccel;
   Vector calibratedGyro; // aka angular velocity
-
-  Vector lastAccel;
-  Vector lastGyro;
 
   Vector velocity;
   Vector position;
@@ -17,4 +15,4 @@ typedef struct {
 } Integrator;
 
 void integrator_calibrate(Integrator* integrator, AccelGyroData data);
-void integrator_update(Integrator* integrator, AccelGyroData data, double deltat);
+void integrator_update(Integrator* integrator, AccelGyroData data, double deltat, CarState car_state);

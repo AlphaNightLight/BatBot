@@ -78,10 +78,6 @@ void standBy() {
 	pwmSinistra(0);
 }
 
-typedef enum {
-	INIT, STANDBY, TURNING, FORWARD
-} CarState;
-
 CarState currentState = INIT;
 
 void transitionToState(CarState newState) {
@@ -163,7 +159,7 @@ void updateCarState(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle) 
 	}
 }
 
-uint8_t runCar(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle) {
+CarState runCar(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle) {
 	updateCarState(speed, desired_angle, actual_angle);
 
 	return currentState;

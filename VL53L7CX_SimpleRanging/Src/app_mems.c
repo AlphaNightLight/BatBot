@@ -98,7 +98,7 @@ void MX_MEMS_Init(void)
   integrator_calibrate(&integrator, average);
 }
 
-void MX_MEMS_Process(void)
+void MX_MEMS_Process(CarState car_state)
 {
 	static uint32_t lastTime = 0;
 	uint32_t curTime = DWT->CYCCNT;
@@ -106,7 +106,7 @@ void MX_MEMS_Process(void)
 	lastTime = curTime;
 	double deltaTimeSeconds = (double) deltaTime / HAL_RCC_GetHCLKFreq();
 
-	integrator_update(&integrator, getAccelGyroData(), deltaTimeSeconds);
+	integrator_update(&integrator, getAccelGyroData(), deltaTimeSeconds, car_state);
 }
 
 #ifdef __cplusplus
