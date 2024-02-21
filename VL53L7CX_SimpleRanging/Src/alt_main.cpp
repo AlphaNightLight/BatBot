@@ -41,10 +41,11 @@ void flush(void *x){
 	fflush(stdout);
 }
 
-
+bool recv=false;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	HAL_UART_Receive_IT(&huart2, incoming_buf+end, 1);//You need to toggle a breakpoint on this line!
+	recv=true;
+	HAL_UART_Receive(&huart2, incoming_buf+end, 1, 100);//You need to toggle a breakpoint on this line!
 	end = (end+1)%INC_BUFFER_SIZE;
 }
 
@@ -123,8 +124,12 @@ int alt_main()
   MX_GPIO_Init();
 
   MX_USART2_UART_Init();
-  HAL_UART_Receive_IT(&huart2, &c, 1);
+  //HAL_UART_Receive_IT(&huart2, &c, 1);
 
+  while(1){
+	  HAL_UART_Receive(&huart2, &c, 1, 1);
+	  HAL_UART_Transmit(&huart2, &c, 1, 100);
+  }
   test_protocol();
 
   MX_TIM3_Init();
