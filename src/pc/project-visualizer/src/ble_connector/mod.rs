@@ -14,7 +14,7 @@ use crate::car::Car;
 use crate::input::Inputs;
 use crate::spawn_wall;
 
-use self::data::{CarPosition, Position};
+use self::data::{BlockRow, CarPosition, Position};
 
 //#[derive(Resource)]
 
@@ -69,16 +69,32 @@ pub fn receive(mut res: NonSendMut<BleResource>, mut q: Query<&mut Cuboids>, mut
     for _ in 0..10 {
         if let Some(data) = res.protocol.read() {
            
-            //println!("{:?}", String::from_utf8(data.clone()));
+            println!("{:?}", String::from_utf8(data.clone()));
             res.unavailable_wave = 0;
-            if let Ok(pos) = Position::try_from(&data[..]) {
-                println!("{:?}", pos);
-                ble_stats.n_blocks+=1;
+            if let Ok(row) = BlockRow::try_from(&data[..]) {
+                println!("{:?}", row);
+                ble_stats.n_blocks+=8;
                 ble_stats.dur_blocks+=res.blocks_instant.elapsed();
+
                 res.blocks_instant=Instant::now();
-                let (t, _) = car.get_single().unwrap();
-                let cuboids = q.iter_mut().next().unwrap();
-                spawn_wall(cuboids, t.translation.x+pos.x, t.translation.y+pos.z, t.translation.z+pos.y);
+                let (t, car) = car.get_single().unwrap();
+                
+
+                let y = row.index;
+                for x in 0..8{
+                    let dist = row.row[x];
+                    let a_orizzontale = (-1.+(x as f32-4.)*2.)*30./7.;
+                    let a_verticale = (-1.+(y as f32-4.)*2.)*30./7.;
+                    let y = dist * a_orizzontale.sin();
+                    let x = dist*(a_verticale+car.angle_cur).cos();
+                    let z = dist*(a_verticale+car.angle_cur).sin();
+                    let cuboids = q.iter_mut().next().unwrap();
+                    spawn_wall(cuboids, 
+                        t.translation.x+x, 
+                        t.translation.y+z, 
+                        t.translation.z+y);
+                }
+                
                 //println!("{pos: ?}");  
             }
             if let Ok(pos) = CarPosition::try_from(&data[..]) {
