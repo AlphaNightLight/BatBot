@@ -7,6 +7,7 @@
 #define MY_TIMER_PERIOD 255
 #define TURNING_DURATION 2000 // Turning duration in milliseconds
 #define DESIRED_TURN_ANGLE 90 // Desired turning angle in degrees
+#define ACCEPTABLE_ERROR 5
 
 // Timer_A Compare Configuration Parameter  (PWM) - P2.5/PM_TA0.2
 Timer_A_CompareModeConfig compareConfig_PWM_DESTRA = {
@@ -175,7 +176,9 @@ void updateCarState(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle)
         break;
 
     case STANDBY:
-        if ((desired_angle == actual_angle) && speed != 0)
+        if ((desired_angle >= actual_angle - ACCEPTABLE_ERROR)
+                && (desired_angle <= actual_angle + ACCEPTABLE_ANGLE)
+                && speed != 0)
         {
             transitionToState(FORWARD);
 
@@ -188,7 +191,8 @@ void updateCarState(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle)
         break;
 
     case TURNING:
-        if (desired_angle == actual_angle)
+        if ((desired_angle >= actual_angle - ACCEPTABLE_ERROR)
+                && (desired_angle <= actual_angle + ACCEPTABLE_ANGLE))
         {
             transitionToState(FORWARD);
 
@@ -231,7 +235,8 @@ void updateCarState(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle)
 
             break;
         }
-        if (desired_angle != actual_angle)
+        if ((desired_angle <= actual_angle - ACCEPTABLE_ERROR)
+                || (desired_angle >= actual_angle + ACCEPTABLE_ANGLE))
         {
             transitionToState(TURNING);
 

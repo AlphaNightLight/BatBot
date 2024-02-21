@@ -3,8 +3,7 @@
 #include"const.hpp"
 #include"hal.hpp"
 //#include"protocol.hpp"
-
-class Protocol{
+typedef struct{
     private:
         
         SerialHal serial;
@@ -21,7 +20,7 @@ class Protocol{
         bool try_read_message();
         //void init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *), void (*inner_flush)(void*));
         void init (SerialHal serial);
-};
+}Protocol;
 
 Protocol new_protocol();
 
