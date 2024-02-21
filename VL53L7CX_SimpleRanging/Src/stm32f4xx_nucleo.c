@@ -65,15 +65,14 @@ static GPIO_TypeDef*   BUTTON_PORT[BUTTONn] = {USER_BUTTON_GPIO_PORT};
 static const uint16_t  BUTTON_PIN[BUTTONn]  = {USER_BUTTON_PIN};
 static const IRQn_Type BUTTON_IRQn[BUTTONn] = {USER_BUTTON_EXTI_IRQn};
 EXTI_HandleTypeDef hpb_exti[BUTTONn] = {{.Line = EXTI_LINE_13}};
-USART_TypeDef* COM_USART[COMn] = {COM1_UART};
-UART_HandleTypeDef hcom_uart[COMn];
+//USART_TypeDef* COM_USART[COMn] = {COM1_UART};
+//UART_HandleTypeDef hcom_uart[COMn];
 #if (USE_COM_LOG > 0)
 static COM_TypeDef COM_ActiveLogPort;
 #endif
 #if (USE_HAL_UART_REGISTER_CALLBACKS == 1U)
 static uint32_t IsUsart2MspCbValid = 0;
 #endif
-__weak HAL_StatusTypeDef MX_USART2_UART_Init(UART_HandleTypeDef* huart);
 /**
  * @}
  */
@@ -596,59 +595,6 @@ int __io_putchar (int ch)
  * @retval None
  */
 
-static void USART2_MspInit(UART_HandleTypeDef* uartHandle)
-{
-  GPIO_InitTypeDef GPIO_InitStruct;
-  /* USER CODE BEGIN USART2_MspInit 0 */
-
-  /* USER CODE END USART2_MspInit 0 */
-    /* Enable Peripheral clock */
-    __HAL_RCC_USART2_CLK_ENABLE();
-
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    /**USART2 GPIO Configuration
-    PA2     ------> USART2_TX
-    PA3     ------> USART2_RX
-    */
-    GPIO_InitStruct.Pin = BUS_USART2_TX_GPIO_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = BUS_USART2_TX_GPIO_AF;
-    HAL_GPIO_Init(BUS_USART2_TX_GPIO_PORT, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = BUS_USART2_RX_GPIO_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = BUS_USART2_RX_GPIO_AF;
-    HAL_GPIO_Init(BUS_USART2_RX_GPIO_PORT, &GPIO_InitStruct);
-
-  /* USER CODE BEGIN USART2_MspInit 1 */
-
-  /* USER CODE END USART2_MspInit 1 */
-}
-
-static void USART2_MspDeInit(UART_HandleTypeDef* uartHandle)
-{
-  /* USER CODE BEGIN USART2_MspDeInit 0 */
-
-  /* USER CODE END USART2_MspDeInit 0 */
-    /* Peripheral clock disable */
-    __HAL_RCC_USART2_CLK_DISABLE();
-
-    /**USART2 GPIO Configuration
-    PA2     ------> USART2_TX
-    PA3     ------> USART2_RX
-    */
-    HAL_GPIO_DeInit(BUS_USART2_TX_GPIO_PORT, BUS_USART2_TX_GPIO_PIN);
-
-    HAL_GPIO_DeInit(BUS_USART2_RX_GPIO_PORT, BUS_USART2_RX_GPIO_PIN);
-
-  /* USER CODE BEGIN USART2_MspDeInit 1 */
-
-  /* USER CODE END USART2_MspDeInit 1 */
-}
 
 /**
  * @}

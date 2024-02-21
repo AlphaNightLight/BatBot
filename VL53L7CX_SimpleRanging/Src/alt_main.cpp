@@ -6,14 +6,19 @@
 #include <stdio.h>
 #include "hal.cpp"
 #include "protocol.cpp"
-
+#include <string.h>
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
+
+UART_HandleTypeDef huart2;
+
+static void MX_USART2_UART_Init(void);
 
 static void MX_GPIO_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
-
+uint8_t c = 'A';
+uint8_t c2 = 'B';
 
 unsigned char read (void * x){
 	return getc(stdin);
@@ -41,6 +46,20 @@ int alt_main()
 
   // initialize timers for PWM
   MX_GPIO_Init();
+
+  MX_USART2_UART_Init();
+  HAL_UART_Receive_IT(&huart2, &c, 1);
+  while (1)
+  {
+    uint8_t roba[] = "miao25\r\n";
+    roba[0] = c2;
+    HAL_UART_Transmit_IT(&huart2, roba, 8);
+    HAL_Delay(1000);
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+
   MX_TIM3_Init();
   MX_TIM4_Init();
   TIM3->CCR1 = 0;
@@ -67,7 +86,7 @@ int alt_main()
   }
 
 	  // Initialize all configured peripherals
-	  BSP_COM_Init(COM1);
+	  //BSP_COM_Init(COM1);
 	  /*MX_TOF_Init();
 	  MX_MEMS_Init();
 	  MX_TOF_LoadDefaultConfig();*/
@@ -85,6 +104,49 @@ int alt_main()
 	    /*MX_TOF_Process();
 	    MX_MEMS_Process();*/
 	  }
+}
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if (true) {
+			c2 = c;
+	}
+	HAL_UART_Receive_IT(&huart2, &c, 1); //You need to toggle a breakpoint on this line!
+}
+
+
+
+
+/**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
 }
 
 

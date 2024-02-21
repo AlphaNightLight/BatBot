@@ -316,14 +316,15 @@ static uint8_t get_key(void)
 {
   uint8_t cmd = 0;
 
-  HAL_UART_Receive(&hcom_uart[COM1], &cmd, 1, HAL_MAX_DELAY);
+  //HAL_UART_Receive(&huart2, &cmd, 1, HAL_MAX_DELAY);
 
   return cmd;
 }
 
 static uint32_t com_has_data(void)
 {
-  return __HAL_UART_GET_FLAG(&hcom_uart[COM1], UART_FLAG_RXNE);;
+  //return __HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE);;
+	return 0;
 }
 
 #ifdef __cplusplus
