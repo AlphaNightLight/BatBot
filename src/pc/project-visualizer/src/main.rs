@@ -27,9 +27,7 @@ fn main() {
     let mut app = App::new();
     app
         //embedded plugin
-        .add_plugins( DefaultPlugins
-            .build()
-            .add_before::<bevy::asset::AssetPlugin, _>(EmbeddedAssetPlugin),)
+        .add_plugins((EmbeddedAssetPlugin::default(), DefaultPlugins))
         //defaulty plugins
         //.add_plugins(DefaultPlugins)
         .add_plugins(FrameTimeDiagnosticsPlugin {})
@@ -74,13 +72,11 @@ fn setup(
     //let my_gltf = embedded.load_path_sync(&Path::new("car.glb#Scene0"));
     // to position our 3d model, simply use the Transform
     // in the SceneBundle
-    let mut dim=Transform::from_xyz(0.0, 0.0, 0.0);
-    dim.scale=Vec3{x: 10.0, y: 10.0, z: 10.0};
     commands
         .spawn((
             SceneBundle {
                 scene: my_gltf,
-                transform: dim,
+                transform: Transform::from_xyz(0.0, 0.0, 0.0),
                 ..Default::default()
             },
             Car::default(),
@@ -89,7 +85,7 @@ fn setup(
         .with_children(|x| {
             x.spawn((
                 Camera3dBundle {
-                    transform: Transform::from_xyz(0.0, 0.5, -2.0)
+                    transform: Transform::from_xyz(0.0, 5.0, -20.0)
                         .looking_at(Vec3::new(0.0, 0.0, 2.0), Vec3::Y),
                     ..Default::default()
                 },
