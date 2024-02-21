@@ -78,6 +78,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Src/main.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/motors.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Src/motors.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/rotation.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Src/rotation.c</locationURI>

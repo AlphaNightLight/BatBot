@@ -1,3 +1,4 @@
+#include "motors.h"
 #include "alt_main.h"
 #include "protocol.hpp"
 #include "main.h"
@@ -14,6 +15,7 @@ static void MX_GPIO_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
 
+uint8_t returnedState;
 
 unsigned char read (void * x){
 	return getc(stdin);
@@ -47,24 +49,26 @@ int alt_main()
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   TIM4->CCR1 = 0;
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
-  uint8_t x=0;
-  bool dir = false;
-  while (1)
-  {
-	  x += 1;
-	  TIM3->CCR1 = x;
-	  TIM4->CCR1 = x;
-	  HAL_Delay(10);
-
-	  if (x==0){
-		  dir = !dir;
-	  }
-
-	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, dir ? GPIO_PinState::GPIO_PIN_RESET : GPIO_PinState::GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, dir ? GPIO_PinState::GPIO_PIN_RESET : GPIO_PinState::GPIO_PIN_SET);
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, dir ? GPIO_PinState::GPIO_PIN_SET : GPIO_PinState::GPIO_PIN_RESET);
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, dir ? GPIO_PinState::GPIO_PIN_SET : GPIO_PinState::GPIO_PIN_RESET);
-  }
+  returnedState = runCar(250, 0, 0);
+  printf("Returned state: %d\n", returnedState);
+//  uint8_t x=0;
+//  bool dir = false;
+//  while (1)
+//  {
+//	  x += 1;
+//	  TIM3->CCR1 = x;
+//	  TIM4->CCR1 = x;
+//	  HAL_Delay(10);
+//
+//	  if (x==0){
+//		  dir = !dir;
+//	  }
+//
+//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, dir ? GPIO_PinState::GPIO_PIN_RESET : GPIO_PinState::GPIO_PIN_SET);
+//	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, dir ? GPIO_PinState::GPIO_PIN_RESET : GPIO_PinState::GPIO_PIN_SET);
+//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, dir ? GPIO_PinState::GPIO_PIN_SET : GPIO_PinState::GPIO_PIN_RESET);
+//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, dir ? GPIO_PinState::GPIO_PIN_SET : GPIO_PinState::GPIO_PIN_RESET);
+//  }
 
 	  // Initialize all configured peripherals
 	  BSP_COM_Init(COM1);
