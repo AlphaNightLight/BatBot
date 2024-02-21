@@ -174,120 +174,12 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct Checker {
+pub struct Protocol {
     pub serial: SerialHal,
     pub buffer: [::std::os::raw::c_uchar; 64usize],
     pub pos: ::std::os::raw::c_uint,
     pub out_buffer: [::std::os::raw::c_uchar; 60usize],
     pub out_len: ::std::os::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_Checker() {
-    const UNINIT: ::std::mem::MaybeUninit<Checker> = ::std::mem::MaybeUninit::uninit();
-    let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<Checker>(),
-        176usize,
-        concat!("Size of: ", stringify!(Checker))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<Checker>(),
-        8usize,
-        concat!("Alignment of ", stringify!(Checker))
-    );
-    assert_eq!(
-        unsafe { ::std::ptr::addr_of!((*ptr).serial) as usize - ptr as usize },
-        0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Checker),
-            "::",
-            stringify!(serial)
-        )
-    );
-    assert_eq!(
-        unsafe { ::std::ptr::addr_of!((*ptr).buffer) as usize - ptr as usize },
-        40usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Checker),
-            "::",
-            stringify!(buffer)
-        )
-    );
-    assert_eq!(
-        unsafe { ::std::ptr::addr_of!((*ptr).pos) as usize - ptr as usize },
-        104usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Checker),
-            "::",
-            stringify!(pos)
-        )
-    );
-    assert_eq!(
-        unsafe { ::std::ptr::addr_of!((*ptr).out_buffer) as usize - ptr as usize },
-        108usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Checker),
-            "::",
-            stringify!(out_buffer)
-        )
-    );
-    assert_eq!(
-        unsafe { ::std::ptr::addr_of!((*ptr).out_len) as usize - ptr as usize },
-        168usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Checker),
-            "::",
-            stringify!(out_len)
-        )
-    );
-}
-extern "C" {
-    #[link_name = "\u{1}_ZN7Checker8send_msgEPhh"]
-    pub fn Checker_send_msg(
-        this: *mut Checker,
-        buff: *mut ::std::os::raw::c_uchar,
-        len: ::std::os::raw::c_uchar,
-    );
-}
-extern "C" {
-    #[link_name = "\u{1}_ZN7Checker16try_read_messageEv"]
-    pub fn Checker_try_read_message(this: *mut Checker) -> bool;
-}
-extern "C" {
-    #[link_name = "\u{1}_ZN7Checker4initE9SerialHal"]
-    pub fn Checker_init(this: *mut Checker, serial: SerialHal);
-}
-impl Checker {
-    #[inline]
-    pub unsafe fn send_msg(
-        &mut self,
-        buff: *mut ::std::os::raw::c_uchar,
-        len: ::std::os::raw::c_uchar,
-    ) {
-        Checker_send_msg(self, buff, len)
-    }
-    #[inline]
-    pub unsafe fn try_read_message(&mut self) -> bool {
-        Checker_try_read_message(self)
-    }
-    #[inline]
-    pub unsafe fn init(&mut self, serial: SerialHal) {
-        Checker_init(self, serial)
-    }
-}
-pub const msg_type_Ok: msg_type = 0;
-pub const msg_type_SpawnWall: msg_type = 1;
-pub const msg_type_Joystick: msg_type = 2;
-pub type msg_type = ::std::os::raw::c_uint;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct Protocol {
-    pub checker: Checker,
 }
 #[test]
 fn bindgen_test_layout_Protocol() {
@@ -304,24 +196,88 @@ fn bindgen_test_layout_Protocol() {
         concat!("Alignment of ", stringify!(Protocol))
     );
     assert_eq!(
-        unsafe { ::std::ptr::addr_of!((*ptr).checker) as usize - ptr as usize },
+        unsafe { ::std::ptr::addr_of!((*ptr).serial) as usize - ptr as usize },
         0usize,
         concat!(
             "Offset of field: ",
             stringify!(Protocol),
             "::",
-            stringify!(checker)
+            stringify!(serial)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).buffer) as usize - ptr as usize },
+        40usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(Protocol),
+            "::",
+            stringify!(buffer)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).pos) as usize - ptr as usize },
+        104usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(Protocol),
+            "::",
+            stringify!(pos)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).out_buffer) as usize - ptr as usize },
+        108usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(Protocol),
+            "::",
+            stringify!(out_buffer)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).out_len) as usize - ptr as usize },
+        168usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(Protocol),
+            "::",
+            stringify!(out_len)
         )
     );
 }
 extern "C" {
+    #[link_name = "\u{1}_ZN8Protocol8send_msgEPhh"]
+    pub fn Protocol_send_msg(
+        this: *mut Protocol,
+        buff: *mut ::std::os::raw::c_uchar,
+        len: ::std::os::raw::c_uchar,
+    );
+}
+extern "C" {
+    #[link_name = "\u{1}_ZN8Protocol16try_read_messageEv"]
+    pub fn Protocol_try_read_message(this: *mut Protocol) -> bool;
+}
+extern "C" {
     #[link_name = "\u{1}_ZN8Protocol4initE9SerialHal"]
-    pub fn Protocol_init(this: *mut Protocol, arg1: SerialHal);
+    pub fn Protocol_init(this: *mut Protocol, serial: SerialHal);
 }
 impl Protocol {
     #[inline]
-    pub unsafe fn init(&mut self, arg1: SerialHal) {
-        Protocol_init(self, arg1)
+    pub unsafe fn send_msg(
+        &mut self,
+        buff: *mut ::std::os::raw::c_uchar,
+        len: ::std::os::raw::c_uchar,
+    ) {
+        Protocol_send_msg(self, buff, len)
+    }
+    #[inline]
+    pub unsafe fn try_read_message(&mut self) -> bool {
+        Protocol_try_read_message(self)
+    }
+    #[inline]
+    pub unsafe fn init(&mut self, serial: SerialHal) {
+        Protocol_init(self, serial)
     }
 }
 extern "C" {

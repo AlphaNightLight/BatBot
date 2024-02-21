@@ -57,7 +57,7 @@ impl<S: Serial> DerefMut for Protocol<S> {
 impl<S: Serial> Drop for Protocol<S> {
     fn drop(&mut self) {
         let layout = Layout::new::<S>();
-        let ptr = self.p.checker.serial.data as *mut u8;
+        let ptr = self.p.serial.data as *mut u8;
         unsafe {
             dealloc(ptr, layout);
         }
@@ -70,11 +70,11 @@ impl<S: Serial> Protocol<S>{
     pub fn read(&mut self) -> Option<Vec<u8>> {
         //print!("t");
         unsafe {
-            if self.checker.try_read_message() {
-                let len = self.checker.out_len as usize;
-                let v = self.checker.out_buffer.iter().take(len).copied().collect();
+            if self.try_read_message() {
+                let len = self.out_len as usize;
+                let v = self.out_buffer.iter().take(len).copied().collect();
 
-                self.checker.out_buffer.iter_mut().for_each(|m| *m = 0);
+                self.out_buffer.iter_mut().for_each(|m| *m = 0);
                 return Some(v);
             }
         }
@@ -86,7 +86,7 @@ impl<S: Serial> Protocol<S>{
         unsafe {
             let len = to_send.len() as u8;
             let buff = to_send.as_mut_ptr();
-            self.checker.send_msg(buff, len);
+            self.send_msg(buff, len);
         }
     }
     ///tries to send a whole struct over serial, if possible

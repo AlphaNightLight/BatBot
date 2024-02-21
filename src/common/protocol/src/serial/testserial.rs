@@ -96,7 +96,7 @@ mod test {
             let mut to_send: Vec<u8> = vec![0, 10];
             let len = to_send.len() as u8;
             let buff = to_send.as_mut_ptr();
-            p.checker.send_msg(buff, len);
+            p.send_msg(buff, len);
         }
         let len = t.available();
         let mut buff = Vec::new();
@@ -111,15 +111,15 @@ mod test {
         unsafe {
             let len = to_send.len() as u8;
             let buff = to_send.as_mut_ptr();
-            robot.checker.send_msg(buff, len);
+            robot.send_msg(buff, len);
         }
     }
 
     fn read<S: Serial>(pc: &mut Protocol<S>) -> Option<Vec<u8>> {
         unsafe {
-            if pc.checker.try_read_message() {
-                let v = pc.checker.out_buffer.to_vec();
-                pc.checker.out_buffer.iter_mut().for_each(|m| *m = 0);
+            if pc.try_read_message() {
+                let v = pc.out_buffer.to_vec();
+                pc.out_buffer.iter_mut().for_each(|m| *m = 0);
                 Some(v)
             } else {
                 None
