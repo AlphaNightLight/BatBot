@@ -7,6 +7,7 @@
 #include "hal.cpp"
 #include "protocol.cpp"
 #include <string.h>
+#include <math.h>
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 
@@ -20,19 +21,93 @@ static void MX_TIM4_Init(void);
 uint8_t c = 'A';
 uint8_t c2 = 'B';
 
+#define INC_BUFFER_SIZE 100
+uint8_t incoming_buf[INC_BUFFER_SIZE];
+uint8_t start=0, end=0;
+
 unsigned char read (void * x){
-	return getc(stdin);
+	unsigned char val = incoming_buf[start];
+	start = (start+1)%INC_BUFFER_SIZE;
+	return val;
 }
 
 void send(void *x, unsigned char c){
-	putc(c, stdout);
+	HAL_UART_Transmit_IT(&huart2, &c, 1);
 }
 int available(void *x){
-
-	return 0;
+	return (end-start+INC_BUFFER_SIZE)%INC_BUFFER_SIZE;
 }
 void flush(void *x){
 	fflush(stdout);
+}
+
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	HAL_UART_Receive_IT(&huart2, incoming_buf+end, 1);//You need to toggle a breakpoint on this line!
+	end = (end+1)%INC_BUFFER_SIZE;
+}
+
+
+int random(int x){
+	return 0;
+}
+int millis(){
+	return DWT->CYCCNT*1000/HAL_RCC_GetHCLKFreq();
+}
+
+void test_protocol (){ //TODO LEVAMI
+	Protocol protocol;
+	SerialHal hal;
+	hal.init(NULL, available, send, read, flush);
+	protocol.init(hal);
+
+	unsigned char buffer[40];
+	unsigned long last_cube=millis();
+	unsigned long last_position_send=millis();
+
+	float x=0.0, y=0.0, z=0.0, angle=0.0;
+	float speed, rotation;
+	unsigned long last_update;
+
+	while(1){
+		if(millis()-last_cube>=30){
+		    last_cube=millis();
+		    float x = ((float)random(1000))/333.0-1.5;
+		    float y = ((float)random(1000))/333.0-0.5;
+		    float z = 0.;//((float)random(1000))/1000.0;
+		    memcpy(buffer, &x, sizeof(float));
+		    memcpy(buffer+4, &y, sizeof(float));
+		    memcpy(buffer+8, &z, sizeof(float));
+		    protocol.send_msg(buffer, 12);
+		  }
+		  if(protocol.try_read_message()){
+		    unsigned char* buff = protocol.out_buffer;
+		    int len = protocol.out_len;
+		    if(len==8){
+		      memcpy(&speed, buff, 4);
+		      memcpy(&rotation, buff+4, 4);
+		    }
+		  }
+		  if(millis() - last_position_send>=20){
+		    last_position_send=millis();
+		    memcpy(buffer, &x, sizeof(float));
+		    memcpy(buffer+4, &y, sizeof(float));
+		    memcpy(buffer+8, &z, sizeof(float));
+		    memcpy(buffer+12, &angle, sizeof(float));
+		    protocol.send_msg(buffer, 16);
+		  }
+
+
+
+		  unsigned long now=millis();
+		  float elapsed = ((float)(now-last_update))/1000;
+		  last_update=now;
+		  x+=elapsed*sin(angle)*speed*8.;
+		  y+=elapsed*cos(angle)*speed*8.;
+		  angle+=rotation*elapsed;
+		  HAL_Delay(1);
+	}
 }
 
 int alt_main()
@@ -49,16 +124,8 @@ int alt_main()
 
   MX_USART2_UART_Init();
   HAL_UART_Receive_IT(&huart2, &c, 1);
-  while (1)
-  {
-    uint8_t roba[] = "miao25\r\n";
-    roba[0] = c2;
-    HAL_UART_Transmit_IT(&huart2, roba, 8);
-    HAL_Delay(1000);
-    /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
-  }
+  test_protocol();
 
   MX_TIM3_Init();
   MX_TIM4_Init();
@@ -105,13 +172,7 @@ int alt_main()
 	    MX_MEMS_Process();*/
 	  }
 }
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if (true) {
-			c2 = c;
-	}
-	HAL_UART_Receive_IT(&huart2, &c, 1); //You need to toggle a breakpoint on this line!
-}
+
 
 
 
