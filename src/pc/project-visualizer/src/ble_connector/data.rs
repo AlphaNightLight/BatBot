@@ -1,6 +1,5 @@
 use std::mem;
 
-use bevy::ui::debug;
 ///helper
 fn try_from<T: Clone>(x: &[u8]) -> Option<T> {
     let t: Vec<u8> = x.iter().take(4).copied().collect();
