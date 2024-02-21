@@ -11,9 +11,9 @@
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 
-UART_HandleTypeDef huart2;
+UART_HandleTypeDef huart1;
 
-static void MX_USART2_UART_Init(void);
+static void MX_USART1_UART_Init(void);
 
 static void MX_GPIO_Init(void);
 static void MX_TIM3_Init(void);
@@ -25,6 +25,9 @@ uint8_t c2 = 'B';
 uint8_t incoming_buf[INC_BUFFER_SIZE];
 uint8_t start=0, end=0;
 
+#define STUPID_BUFFER_SIZE 24
+unsigned char STUPID_BUF[STUPID_BUFFER_SIZE];
+
 unsigned char read (void * x){
 	unsigned char val = incoming_buf[start];
 	start = (start+1)%INC_BUFFER_SIZE;
@@ -32,21 +35,34 @@ unsigned char read (void * x){
 }
 
 void send(void *x, unsigned char c){
-	HAL_UART_Transmit(&huart2, &c, 1, 100);
+	HAL_UART_Transmit(&huart1, &c, 1, 100);
 }
 int available(void *x){
+	HAL_UART_Receive_IT(&huart1, incoming_buf+end, 1);
 	return (end-start+INC_BUFFER_SIZE)%INC_BUFFER_SIZE;
 }
 void flush(void *x){
-	fflush(stdout);
+	//fflush(stdout);
 }
 
-bool recv=false;
+
+//bool recv=false;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	recv=true;
-	HAL_UART_Receive(&huart2, incoming_buf+end, 1, 100);//You need to toggle a breakpoint on this line!
-	end = (end+1)%INC_BUFFER_SIZE;
+
+
+	//recv=true;
+	//HAL_UART_Receive_IT(&huart1, incoming_buf+end, 1);//You need to toggle a breakpoint on this line!
+	HAL_UART_Receive_IT(&huart1, STUPID_BUF, 10);
+	for(int i=0; i<10; i++){
+		incoming_buf[end]=STUPID_BUF[i];
+		end = (end+1)%INC_BUFFER_SIZE;
+		if(end==0){
+			int t =0;
+		}
+	}
+
+
 }
 
 
@@ -123,13 +139,14 @@ int alt_main()
   // initialize timers for PWM
   MX_GPIO_Init();
 
-  MX_USART2_UART_Init();
-  //HAL_UART_Receive_IT(&huart2, &c, 1);
+  MX_USART1_UART_Init();
+  HAL_UART_Receive_IT(&huart1, &c, 1);
 
-  while(1){
-	  HAL_UART_Receive(&huart2, &c, 1, 1);
-	  HAL_UART_Transmit(&huart2, &c, 1, 100);
-  }
+  /*while(1){
+	  HAL_UART_Receive_IT(&huart1, &c, 1);
+	  HAL_Delay(100);
+	  HAL_UART_Transmit(&huart1, &c, 1, 100);
+  }*/
   test_protocol();
 
   MX_TIM3_Init();
@@ -187,7 +204,7 @@ int alt_main()
   * @param None
   * @retval None
   */
-static void MX_USART2_UART_Init(void)
+static void MX_USART1_UART_Init(void)
 {
 
   /* USER CODE BEGIN USART2_Init 0 */
@@ -197,15 +214,15 @@ static void MX_USART2_UART_Init(void)
   /* USER CODE BEGIN USART2_Init 1 */
 
   /* USER CODE END USART2_Init 1 */
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart2) != HAL_OK)
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
   }
