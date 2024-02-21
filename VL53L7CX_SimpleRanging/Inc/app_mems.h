@@ -24,6 +24,11 @@
 extern "C" {
 #endif
 
+#include "integrator.h"
+
+
+extern Integrator integrator;
+
 /* Includes ------------------------------------------------------------------*/
 
 /* Exported defines ----------------------------------------------------------*/

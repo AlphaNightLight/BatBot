@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private variables ---------------------------------------------------------*/
 static IKS4A1_MOTION_SENSOR_Capabilities_t MotionCapabilities[IKS4A1_MOTION_INSTANCES_NBR];
-static Integrator integrator;
+Integrator integrator;
 const double mgToMps2 = 9.80665 / 1000;
 const double mdpsToRadps = 0.000017453292519943295769236907684886;
 const int CALIBRATION_SKIP_COUNT = 5;
