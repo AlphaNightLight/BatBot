@@ -1,4 +1,5 @@
 #include "motors.h"
+#include "custom_ranging_sensor.h"
 #include "alt_main.h"
 #include "protocol.hpp"
 #include "main.h"
@@ -195,10 +196,16 @@ int alt_main()
 	    MX_MEMS_Process();*/
 	  }
 
+	  RANGING_SENSOR_Result_t TOF_data;
 	  while (1)
 	  {
-		  MX_TOF_Process();
-		  CarState returnedState = runCar(250, 0, 0);
+		  int32_t TOF_status = MX_TOF_Process(&TOF_data);
+		  if (TOF_status == BSP_ERROR_NONE) {
+			  // TODO INVIARLO CON PROTOCOLLO
+		  }
+
+		  // TODO PRENDERE DATI DA PROTOCOLLO
+		  CarState returnedState = runCar(250, 0, integrator.rotation.z);
 		  MX_MEMS_Process(returnedState);
 	  }
 }

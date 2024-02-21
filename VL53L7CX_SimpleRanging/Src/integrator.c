@@ -27,11 +27,9 @@ void integrator_update(Integrator* this, AccelGyroData data, double deltat, CarS
 		return; // ignore any movement
 	}
 
-	if (car_state == TURNING) {
-		this->rotation = vector_sum(this->rotation, vector_multiplied(vector_sum(data.gyro, vector_multiplied(this->calibratedGyro, -1)), deltat));
-		this->rotation.x = 0;
-		this->rotation.y = 0;
-	}
+	this->rotation = vector_sum(this->rotation, vector_multiplied(vector_sum(data.gyro, vector_multiplied(this->calibratedGyro, -1)), deltat));
+	this->rotation.x = 0;
+	this->rotation.y = 0;
 
 #ifdef INTEGRATOR_DEBUG
 	if (tt==0){
@@ -48,8 +46,11 @@ void integrator_update(Integrator* this, AccelGyroData data, double deltat, CarS
 	if (car_state == FORWARD) {
 		accel = rotate(&accel, &this->rotation);
 		accel = vector_sum(accel, vector_multiplied(this->calibratedAccel, -1));
+		accel.z = 0;
 		this->velocity = vector_sum(this->velocity, vector_multiplied(accel, deltat));
+		this->velocity.z = 0;
 		this->position = vector_sum(this->position, vector_multiplied(this->velocity, deltat));
+		this->position.z = 0;
 	}
 
 #ifdef INTEGRATOR_DEBUG

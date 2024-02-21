@@ -26,6 +26,8 @@
 extern "C" {
 #endif
 
+#include "custom_ranging_sensor.h"
+
 /* Includes ------------------------------------------------------------------*/
 
 /* Exported defines ----------------------------------------------------------*/
@@ -33,7 +35,7 @@ extern "C" {
 /* Exported functions --------------------------------------------------------*/
 void MX_TOF_Init(void);
 void MX_TOF_LoadDefaultConfig(void);
-void MX_TOF_Process(void);
+int32_t MX_TOF_Process(RANGING_SENSOR_Result_t* pResult);
 
 #ifdef __cplusplus
 }
