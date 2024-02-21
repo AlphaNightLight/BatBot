@@ -40,7 +40,7 @@
 		<link>
 			<name>Application/User/alt_main.cpp</name>
 			<type>1</type>
-			<location>/home/alessio/Documents/universita/3.1/embedded/BatBot/VL53L7CX_SimpleRanging/Src/alt_main.cpp</location>
+			<locationURI>PARENT-1-PROJECT_LOC/Src/alt_main.cpp</locationURI>
 		</link>
 		<link>
 			<name>Application/User/app_mems.c</name>
