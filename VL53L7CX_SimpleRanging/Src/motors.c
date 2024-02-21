@@ -21,9 +21,9 @@ void setMotorDirections(bool in1, bool in2, bool in3, bool in4) {
 	}
 	// Set IN3
 	if (in3) {
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
 	} else {
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
 	}
 
 	// Set IN4
