@@ -29,12 +29,18 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 		<nature>com.st.stm32cube.ide.mcu.MCUCubeImportedExampleProjectNature</nature>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
 	</natures>
 	<linkedResources>
 		<link>
 			<name>VL53L7CX_SimpleRanging.ioc</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/VL53L7CX_SimpleRanging.ioc</locationURI>
+		</link>
+		<link>
+			<name>Application/User/alt_main.cpp</name>
+			<type>1</type>
+			<location>/home/alessio/Documents/universita/3.1/embedded/BatBot/VL53L7CX_SimpleRanging/Src/alt_main.cpp</location>
 		</link>
 		<link>
 			<name>Application/User/app_mems.c</name>

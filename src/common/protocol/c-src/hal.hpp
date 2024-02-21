@@ -1,7 +1,7 @@
 #ifndef custom_protocol_hal
 #define custom_protocol_hal
 
-class SerialHal{
+typedef struct{
     private:
         void * data;
         int (*inner_available)(void *);
@@ -15,6 +15,6 @@ class SerialHal{
         unsigned char read();
         unsigned int available();
         void init(void *data, int (*inner_available)(void *), void (*inner_send) (void*, unsigned char), unsigned char (*inner_read)(void *), void (*inner_flush)(void*));
-};
+}SerialHal;
 SerialHal new_serial_hal();
 #endif
