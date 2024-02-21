@@ -1,4 +1,5 @@
 #include "motors.h"
+#include "custom_ranging_sensor.h"
 #include "alt_main.h"
 #include "protocol.hpp"
 #include "main.h"
@@ -21,8 +22,6 @@ static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
 uint8_t c = 'A';
 uint8_t c2 = 'B';
-
-uint8_t returnedState;
 
 #define INC_BUFFER_SIZE 100
 uint8_t incoming_buf[INC_BUFFER_SIZE];
@@ -158,8 +157,6 @@ int alt_main()
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   TIM4->CCR1 = 0;
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
-  returnedState = runCar(250, 0, 0);
-  printf("Returned state: %d\n", returnedState);
 //  uint8_t x=0;
 //  bool dir = false;
 //  while (1)
@@ -197,6 +194,19 @@ int alt_main()
 		prot.send_msg(s, 5);
 	    /*MX_TOF_Process();
 	    MX_MEMS_Process();*/
+	  }
+
+	  RANGING_SENSOR_Result_t TOF_data;
+	  while (1)
+	  {
+		  int32_t TOF_status = MX_TOF_Process(&TOF_data);
+		  if (TOF_status == BSP_ERROR_NONE) {
+			  // TODO INVIARLO CON PROTOCOLLO
+		  }
+
+		  // TODO PRENDERE DATI DA PROTOCOLLO
+		  CarState returnedState = runCar(250, 0, integrator.rotation.z);
+		  MX_MEMS_Process(returnedState);
 	  }
 }
 

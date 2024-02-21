@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private variables ---------------------------------------------------------*/
 static IKS4A1_MOTION_SENSOR_Capabilities_t MotionCapabilities[IKS4A1_MOTION_INSTANCES_NBR];
-static Integrator integrator;
+Integrator integrator;
 const double mgToMps2 = 9.80665 / 1000;
 const double mdpsToRadps = 0.000017453292519943295769236907684886;
 const int CALIBRATION_SKIP_COUNT = 5;
@@ -98,7 +98,7 @@ void MX_MEMS_Init(void)
   integrator_calibrate(&integrator, average);
 }
 
-void MX_MEMS_Process(void)
+void MX_MEMS_Process(CarState car_state)
 {
 	static uint32_t lastTime = 0;
 	uint32_t curTime = DWT->CYCCNT;
@@ -106,7 +106,7 @@ void MX_MEMS_Process(void)
 	lastTime = curTime;
 	double deltaTimeSeconds = (double) deltaTime / HAL_RCC_GetHCLKFreq();
 
-	integrator_update(&integrator, getAccelGyroData(), deltaTimeSeconds);
+	integrator_update(&integrator, getAccelGyroData(), deltaTimeSeconds, car_state);
 }
 
 #ifdef __cplusplus
