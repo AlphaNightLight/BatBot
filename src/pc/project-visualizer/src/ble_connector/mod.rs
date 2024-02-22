@@ -69,7 +69,7 @@ pub fn receive(mut res: NonSendMut<BleResource>, mut q: Query<&mut Cuboids>, mut
     for _ in 0..10 {
         if let Some(data) = res.protocol.read() {
             if let Ok(s) = String::from_utf8(data.clone()){
-                if s.chars().all(|x| x.is_ascii_alphanumeric()){
+                if s.chars().all(|ch| (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '!' || ch == '\"' || ch == '#' || ch == '$' || ch == '%' || ch == '&' || ch == '\'' || ch == '(' || ch == ')' || ch == '*' || ch == '+' || ch == ',' || ch == '-' || ch == '.' || ch == '/' || ch == ':' || ch == ';' || ch == '<' || ch == '=' || ch == '>' || ch == '?' || ch == '@' || ch == '[' || ch == '\\' || ch == ']' || ch == '^' || ch == '`' || ch == '{' || ch == '|' || ch == '}' || ch == ' '){
                     println!("{}", s);
                 }
             }
@@ -81,7 +81,7 @@ pub fn receive(mut res: NonSendMut<BleResource>, mut q: Query<&mut Cuboids>, mut
 
                 res.blocks_instant=Instant::now();
                 let (t, car) = car.get_single().unwrap();
-                
+
 
                 let y = row.index;
                 for x in 0..8{
@@ -92,13 +92,13 @@ pub fn receive(mut res: NonSendMut<BleResource>, mut q: Query<&mut Cuboids>, mut
                     let x = dist*(a_verticale+car.angle_cur).cos();
                     let z = dist*(a_verticale+car.angle_cur).sin();
                     let cuboids = q.iter_mut().next().unwrap();
-                    spawn_wall(cuboids, 
-                        t.translation.x+x, 
-                        t.translation.y+z, 
+                    spawn_wall(cuboids,
+                        t.translation.x+x,
+                        t.translation.y+z,
                         t.translation.z+y);
                 }
-                
-                //println!("{pos: ?}");  
+
+                //println!("{pos: ?}");
             }
             if let Ok(pos) = CarPosition::try_from(&data[..]) {
                 ble_stats.n_pos+=1;
@@ -121,9 +121,9 @@ pub fn receive(mut res: NonSendMut<BleResource>, mut q: Query<&mut Cuboids>, mut
                 continue;
             }
 
-            if let Ok(protocol) = connect(res.runtime.handle().clone()) {
+            /*if let Ok(protocol) = connect(res.runtime.handle().clone()) {
                 res.protocol = protocol;
-            }
+            }*/
         }
     }
 }

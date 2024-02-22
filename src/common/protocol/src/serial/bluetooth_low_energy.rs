@@ -31,7 +31,7 @@ impl Ble {
     /// Function to get a new bluetooth device
     ///
     /// it must be called with the desired bluetooth address, and an handle to a tokio runtime
-    ///  
+    ///
     pub fn try_new(
         address: Address,
         service_uuid: Uuid,
@@ -91,7 +91,7 @@ async fn get_characteristic(device: Device, service_uuid: Uuid) -> Result<PreBle
         let r = c.notify_io().await?;
         //println!("write");
         let w = c.write_io().await?;
-        
+
         return Ok(PreBle {
             reader: r,
             writer: w,
@@ -128,7 +128,7 @@ async fn discover(address: Address, service_uuid: Uuid) -> Result<PreBle, Box<dy
 
                 // if another device connected, let's try to find our characteristics
                 let device = adapter.device(addr)?;
-                
+
                 println!("device {:?} {:?}", device, device.name().await);
                 //starting connection
                 connect(&device).await?;
@@ -185,11 +185,11 @@ impl Serial for Ble {
         }else{
             self.wrong_wave+=1;
         }
-        if self.wrong_wave>1000{
+        /*if self.wrong_wave>1000{
             println!("reconnection");
             let _ =self.device.connect();
             self.wrong_wave=0;
-        }
+        }*/
         self.read_buffer.len() as i32
     }
 }

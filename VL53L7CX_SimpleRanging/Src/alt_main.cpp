@@ -149,7 +149,7 @@ int alt_main()
 	  HAL_Delay(100);
 	  HAL_UART_Transmit(&huart1, &c, 1, 100);
   }*/
-  test_protocol();
+  //test_protocol();
 
   MX_TIM3_Init();
   MX_TIM4_Init();
@@ -178,35 +178,40 @@ int alt_main()
 
 	  // Initialize all configured peripherals
 	  //BSP_COM_Init(COM1);
-	  /*MX_TOF_Init();
-	  MX_MEMS_Init();
-	  MX_TOF_LoadDefaultConfig();*/
+	  //MX_TOF_Init();
+	  //MX_MEMS_Init();
+	  //MX_TOF_LoadDefaultConfig();
 
 	  SerialHal serial =new_serial_hal();
 	  serial.init(NULL, available, send, read, flush);
-	  unsigned char s[] = "ciao\n";
 	  Protocol prot = new_protocol();
 	  prot.init(serial);
 
-	  // Infinite loop
-	  while (1)
-	  {
-		prot.send_msg(s, 5);
-	    /*MX_TOF_Process();
-	    MX_MEMS_Process();*/
-	  }
-
+	  float speed=0.0, rotation=0.0;
 	  RANGING_SENSOR_Result_t TOF_data;
 	  while (1)
 	  {
-		  int32_t TOF_status = MX_TOF_Process(&TOF_data);
+		  char roba[345];
+		  int len2 = sprintf(roba, "tizio=%f %f", speed, rotation);
+		  prot.send_msg((uint8_t*)roba, strlen(roba));
+		  prot.send_msg((uint8_t*)"ciao", 4);
+		  int32_t TOF_status = -1;//MX_TOF_Process(&TOF_data);
 		  if (TOF_status == BSP_ERROR_NONE) {
 			  // TODO INVIARLO CON PROTOCOLLO
 		  }
 
+		  if(prot.try_read_message()){
+			unsigned char* buff = prot.out_buffer;
+			int len = prot.out_len;
+			if(len==8){
+			  memcpy(&speed, buff, 4);
+			  memcpy(&rotation, buff+4, 4);
+			}
+		  }
+
 		  // TODO PRENDERE DATI DA PROTOCOLLO
-		  CarState returnedState = runCar(250, 0, integrator.rotation.z);
-		  MX_MEMS_Process(returnedState);
+		  CarState returnedState = runCar(speed * 255, 0, 0);
+		  //MX_MEMS_Process(returnedState);
 	  }
 }
 
@@ -421,7 +426,7 @@ void send_to_display(Protocol &protocol, RANGING_SENSOR_Result_t to_send){
 	uint8_t tmp[33];
 	for (uint8_t i=0; i<8; i++){
 		tmp[0]=i;
-		for(unint8_t x=0; x<8; x++){
+		for(uint8_t x=0; x<8; x++){
 			memcpy(tmp+1+x*4, to_send.ZoneResult+i*8+x, sizeof(float));
 		}
 		protocol.send_msg(tmp, 33);

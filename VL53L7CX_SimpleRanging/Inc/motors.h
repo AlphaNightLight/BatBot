@@ -11,7 +11,7 @@ extern "C"
 {
 #endif
 
-CarState runCar(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle);
+CarState runCar(uint8_t speed, double desired_angle, double actual_angle);
 
 #ifdef __cplusplus
 }
