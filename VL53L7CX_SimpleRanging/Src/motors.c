@@ -4,6 +4,7 @@
 #include "motors.h"
 
 #define ACCEPTABLE_ERROR 5
+#define TURNING_SPEED 200
 
 void setMotorDirections(bool in1, bool in2, bool in3, bool in4) {
 	// Set IN1
@@ -62,14 +63,14 @@ void moveForward(uint8_t speed) {
 
 void turnLeft() {
 	setMotorsTurnLeft();
-	pwmDestra(127);
-	pwmSinistra(127);
+	pwmDestra(TURNING_SPEED);
+	pwmSinistra(TURNING_SPEED);
 }
 
 void turnRight() {
 	setMotorsTurnRight();
-	pwmDestra(127);
-	pwmSinistra(127);
+	pwmDestra(TURNING_SPEED);
+	pwmSinistra(TURNING_SPEED);
 }
 
 void standBy() {
@@ -97,16 +98,20 @@ void updateCarState(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle) 
 				&& (desired_angle <= actual_angle + ACCEPTABLE_ERROR)
 				&& speed != 0) {
 			transitionToState(FORWARD);
-
+			break;
+		} else if (speed != 0) {
+			transitionToState(TURNING);
 			break;
 		}
 		standBy();
 
-		transitionToState(TURNING);
-
 		break;
 
 	case TURNING:
+		if (speed == 0) {
+			transitionToState(STANDBY);
+			break;
+		}
 		if ((desired_angle >= actual_angle - ACCEPTABLE_ERROR)
 				&& (desired_angle <= actual_angle + ACCEPTABLE_ERROR)) {
 			transitionToState(FORWARD);
@@ -127,10 +132,6 @@ void updateCarState(uint8_t speed, uint8_t desired_angle, uint8_t actual_angle) 
 				turnLeft();
 			}
 		}
-
-		standBy();
-
-		transitionToState(FORWARD);
 
 		break;
 

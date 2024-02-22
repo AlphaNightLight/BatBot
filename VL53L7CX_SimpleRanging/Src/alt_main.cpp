@@ -189,12 +189,14 @@ int alt_main()
 
 	  float speed=0.0, rotation=0.0;
 	  RANGING_SENSOR_Result_t TOF_data;
+
+	  uint32_t lasttime = DWT->CYCCNT;
+	  float realAngle=0;
 	  while (1)
 	  {
 		  char roba[345];
-		  int len2 = sprintf(roba, "tizio=%f %f", speed, rotation);
+		  int len2 = sprintf(roba, "tizio=%f %f %f", speed, rotation, realAngle);
 		  prot.send_msg((uint8_t*)roba, strlen(roba));
-		  prot.send_msg((uint8_t*)"ciao", 4);
 		  int32_t TOF_status = -1;//MX_TOF_Process(&TOF_data);
 		  if (TOF_status == BSP_ERROR_NONE) {
 			  // TODO INVIARLO CON PROTOCOLLO
@@ -203,14 +205,29 @@ int alt_main()
 		  if(prot.try_read_message()){
 			unsigned char* buff = prot.out_buffer;
 			int len = prot.out_len;
+			float newRotation;
 			if(len==8){
 			  memcpy(&speed, buff, 4);
-			  memcpy(&rotation, buff+4, 4);
+			  memcpy(&newRotation, buff+4, 4);
+			}
+			if (speed != 0) {
+				rotation = newRotation;
 			}
 		  }
 
 		  // TODO PRENDERE DATI DA PROTOCOLLO
-		  CarState returnedState = runCar(speed * 255, 0, 0);
+		  if (DWT->CYCCNT - lasttime > 100000) {
+			  lasttime = DWT->CYCCNT;
+			  if (speed != 0) realAngle += (rotation > realAngle ? 1. : -1.);
+				unsigned char buffer[40];
+				float xerooo = 0.0;
+			    memcpy(buffer, &xerooo, sizeof(float));
+			    memcpy(buffer+4, &xerooo, sizeof(float));
+			    memcpy(buffer+8, &xerooo, sizeof(float));
+			    memcpy(buffer+12, &realAngle, sizeof(float));
+			    prot.send_msg(buffer, 16);
+		  }
+		  CarState returnedState = runCar(speed * 180, rotation, realAngle);
 		  //MX_MEMS_Process(returnedState);
 	  }
 }

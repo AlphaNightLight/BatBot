@@ -106,7 +106,7 @@ pub fn receive(mut res: NonSendMut<BleResource>, mut q: Query<&mut Cuboids>, mut
                 res.positions_instant=Instant::now();
                 let (_, mut car) = car.get_single_mut().unwrap();
                 car.obj=Vec3{x: pos.x, y: pos.z, z: pos.y};
-                car.angle_obj= pos.angle;
+                car.angle_obj= pos.angle / 180. * PI;
                 /*transform.translation.x=pos.x;
                 transform.translation.y=pos.z;
                 transform.translation.z=pos.y;
@@ -131,7 +131,10 @@ pub fn send(mut res: NonSendMut<BleResource>, inputs: Res<Inputs>){
     if res.last_joystick.elapsed().as_millis()>20{
         res.last_joystick=Instant::now();
         //println!("sending");
-        let speed = (inputs.speed.powi(2)+inputs.rot_speed.powi(2)).sqrt();
+        let mut speed = (inputs.speed.powi(2)+inputs.rot_speed.powi(2)).sqrt();
+        if speed > 1.0 {
+            speed = 1.0;
+        }
         let rot = f32::atan2(inputs.speed, inputs.rot_speed)*180./PI;
         let j = Joystick{x: speed, y: rot};
         res.protocol.send_struct(j);
