@@ -131,57 +131,30 @@ void test_protocol (){ //TODO LEVAMI
 
 int alt_main()
 {
-	// Reset of all peripherals, Initializes the Flash interface and the Systick.
+	  // Reset of all peripherals, Initializes the Flash interface and the Systick.
 	  HAL_Init();
+
 	  // initialize the DWT->CYCCNT clock cycles counter, used for precise timings
 	  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
 	  DWT->CYCCNT = 0;
 	  DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 
-  // initialize timers for PWM
-  MX_GPIO_Init();
+	  // initialize PINs
+	  MX_GPIO_Init();
 
-  MX_USART1_UART_Init();
-  HAL_UART_Receive_IT(&huart1, &c, 1);
-
-  /*while(1){
+	  // initialize UART
+	  MX_USART1_UART_Init();
 	  HAL_UART_Receive_IT(&huart1, &c, 1);
-	  HAL_Delay(100);
-	  HAL_UART_Transmit(&huart1, &c, 1, 100);
-  }*/
-  //test_protocol();
 
-  MX_TIM3_Init();
-  MX_TIM4_Init();
-  TIM3->CCR1 = 0;
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
-  TIM4->CCR1 = 0;
-  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
-//  uint8_t x=0;
-//  bool dir = false;
-//  while (1)
-//  {
-//	  x += 1;
-//	  TIM3->CCR1 = x;
-//	  TIM4->CCR1 = x;
-//	  HAL_Delay(10);
-//
-//	  if (x==0){
-//		  dir = !dir;
-//	  }
-//
-//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, dir ? GPIO_PinState::GPIO_PIN_RESET : GPIO_PinState::GPIO_PIN_SET);
-//	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, dir ? GPIO_PinState::GPIO_PIN_RESET : GPIO_PinState::GPIO_PIN_SET);
-//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, dir ? GPIO_PinState::GPIO_PIN_SET : GPIO_PinState::GPIO_PIN_RESET);
-//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, dir ? GPIO_PinState::GPIO_PIN_SET : GPIO_PinState::GPIO_PIN_RESET);
-//  }
+	  // setup timers for PWM
+	  MX_TIM3_Init();
+	  MX_TIM4_Init();
+	  TIM3->CCR1 = 0;
+	  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+	  TIM4->CCR1 = 0;
+	  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
 
-	  // Initialize all configured peripherals
-	  //BSP_COM_Init(COM1);
-	  //MX_TOF_Init();
-	  //MX_MEMS_Init();
-	  //MX_TOF_LoadDefaultConfig();
-
+	  // initialize Serial object for Bluetooth communication
 	  SerialHal serial =new_serial_hal();
 	  serial.init(NULL, available, send, read, flush);
 	  Protocol prot = new_protocol();
@@ -194,12 +167,13 @@ int alt_main()
 	  float realAngle=0;
 	  while (1)
 	  {
-		  char roba[345];
-		  int len2 = sprintf(roba, "tizio=%f %f %f", speed, rotation, realAngle);
-		  prot.send_msg((uint8_t*)roba, strlen(roba));
-		  int32_t TOF_status = -1;//MX_TOF_Process(&TOF_data);
+		  char s[345];
+		  int len2 = sprintf(s, "DEBUG LOOP %f %f %f", speed, rotation, realAngle);
+		  prot.send_msg((uint8_t*)s, strlen(s));
+
+		  int32_t TOF_status = MX_TOF_Process(&TOF_data);
 		  if (TOF_status == BSP_ERROR_NONE) {
-			  // TODO INVIARLO CON PROTOCOLLO
+			  prot.send_msg((uint8_t*)&TOF_data, 68);
 		  }
 
 		  if(prot.try_read_message()){
@@ -215,20 +189,8 @@ int alt_main()
 			}
 		  }
 
-		  // TODO PRENDERE DATI DA PROTOCOLLO
-		  if (DWT->CYCCNT - lasttime > 100000) {
-			  lasttime = DWT->CYCCNT;
-			  if (speed != 0) realAngle += (rotation > realAngle ? 1. : -1.);
-				unsigned char buffer[40];
-				float xerooo = 0.0;
-			    memcpy(buffer, &xerooo, sizeof(float));
-			    memcpy(buffer+4, &xerooo, sizeof(float));
-			    memcpy(buffer+8, &xerooo, sizeof(float));
-			    memcpy(buffer+12, &realAngle, sizeof(float));
-			    prot.send_msg(buffer, 16);
-		  }
-		  CarState returnedState = runCar(speed * 180, rotation, realAngle);
-		  //MX_MEMS_Process(returnedState);
+		  CarState returnedState = runCar(speed * 180, rotation, integrator.rotation.z);
+		  MX_MEMS_Process(returnedState); // updates the integrator variable with new sensing data
 	  }
 }
 
